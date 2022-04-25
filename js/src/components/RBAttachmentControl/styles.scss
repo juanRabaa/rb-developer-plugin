@@ -1,0 +1,13 @@
+.rb-attachments-control{
+    .gallery-images{
+        display: flex;
+
+        .gallery-image{
+            min-width: 0;
+            height: 116px;
+            object-fit: cover;
+            width: 100%;
+        }
+    }
+
+}

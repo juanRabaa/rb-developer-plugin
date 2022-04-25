@@ -1,0 +1,67 @@
+.repeaterField{
+    > .addButtonContainer{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .addBtn {
+            cursor: pointer;
+        }
+    }
+
+    > .repeaterItems {
+        > .repeaterItem {
+            margin-bottom: 1rem;
+            position: relative;
+            background-color: #007cba14;
+
+            > .itemHeader {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px;
+                user-select: none;
+
+                .collapse{
+                    cursor: pointer;
+                }
+
+                .itemTitle{
+                    flex-grow: 1;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+
+                .actions{
+                    .trashIcon {
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            > .itemContent{
+                padding: 12px;
+                border-top: solid 1px #00000029;
+            }
+        }
+    }
+
+
+    &.accordion {
+        > .repeaterItems {
+            > .repeaterItem{
+                margin-bottom: 0;
+
+                > .itemHeader{
+                    border-bottom: solid 1px #00000029;
+                }
+
+                > .itemContent{
+                    padding: 12px;
+                    border-top: none;
+                }
+            }
+        }
+    }
+}
