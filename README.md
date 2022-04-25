@@ -1,2 +1,2 @@
-# rb-developer-plugin
+# RB Developer Plugin
 Wordpress Plugin that adds developer tools
