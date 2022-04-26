@@ -11,7 +11,6 @@ const { __ } = wp.i18n;
 //     RBField
 // };
 
-console.log('TESTTESTTEST');
 function parseObjectPropNames(source, mapping){
     Object.keys(mapping).forEach(( ogPropKey, i) => {
         if( source.hasOwnProperty(ogPropKey) ){
@@ -56,6 +55,7 @@ function pasePHPFieldData(fieldData){
     };
 
     parseObjectPropNames(fieldData, fieldPropsMapping);
+    console.log("PARSING REPEATER PHP PROPS", fieldData);
 
     if(typeof fieldData.repeater === "object"){
         parseObjectPropNames(fieldData.repeater, repeaterPropsMapping);
@@ -100,22 +100,22 @@ const RBPostMetaFields = () => {
         }
     }
 
+    console.log('registeredPostMetaFields', registeredPostMetaFields);
     if(registeredPostMetaFields){
-        console.log('registeredPostMetaFields', registeredPostMetaFields);
-
         Object.keys(registeredPostMetaFields).forEach((metaKey) => {
-            const metaFieldData = pasePHPFieldData(registeredPostMetaFields[metaKey]);
+            const postMetaFieldConfig = registeredPostMetaFields[metaKey];
+            const fieldData = pasePHPFieldData(postMetaFieldConfig.field);
 
-            const PositionComponent = getPositionComponent(metaFieldData);
+            const PositionComponent = getPositionComponent(postMetaFieldConfig);
             fields.push(
                 <PositionComponent
                     name={metaKey}
-                    title={metaFieldData.panel.title}
-                    icon={metaFieldData.panel.icon}
+                    title={postMetaFieldConfig.panel.title}
+                    icon={postMetaFieldConfig.panel.icon}
                     className="custom-panel"
                 >
                     <PostMetaField
-                        {...metaFieldData.fields }
+                        {...fieldData }
                     />
                 </PositionComponent>
             );

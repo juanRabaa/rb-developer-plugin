@@ -6,14 +6,32 @@
 RB_Post_Meta_Field::add_field(array(
     // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
     "meta_key"      => "single_meta_field",
-    "post_type"     => "portfolio",
+    "post_type"     => "post",
     "single"        => true,
     "panel"         => array(
         "title"         => "Single Value Field",
         "icon"          => "format-gallery",
         "position"      => "document-settings-panel",
     ),
-    "fields"        => array(
+    "field"        => array(
+        "type"          => "string",
+        "label"         => "Test Single",
+        "description"   => "Test Single",
+        "component"     => "text",
+    ),
+));
+
+RB_Post_Meta_Field::add_field(array(
+    // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
+    "meta_key"      => "single_meta_field",
+    "post_type"     => "page",
+    "single"        => true,
+    "panel"         => array(
+        "title"         => "Single Value Field",
+        "icon"          => "format-gallery",
+        "position"      => "document-settings-panel",
+    ),
+    "field"        => array(
         "type"          => "string",
         "label"         => "Test Single",
         "description"   => "Test Single",
@@ -109,7 +127,7 @@ $test_fields_data = array(
 
 RB_Post_Meta_Field::add_field(array(
     "meta_key"      => "meta_test",
-    "post_type"     => "portfolio",
+    "post_type"     => "post",
     "single"        => true,
     "type"          => "object",
     "panel"         => array(
@@ -117,12 +135,12 @@ RB_Post_Meta_Field::add_field(array(
         "icon"          => "format-gallery",
         "position"      => "document-settings-panel",
     ),
-    "fields"        => $test_fields_data,
+    "field"        => $test_fields_data,
 ));
 
 RB_Post_Meta_Field::add_field(array(
     "meta_key"      => "sidebar_test_meta",
-    "post_type"     => "portfolio",
+    "post_type"     => "post",
     "single"        => true,
     "type"          => "object",
     "panel"         => array(
@@ -130,7 +148,7 @@ RB_Post_Meta_Field::add_field(array(
         "icon"          => "format-gallery",
         "position"      => "sidebar",
     ),
-    "fields"        => $test_fields_data,
+    "field"        => $test_fields_data,
 ));
 
 

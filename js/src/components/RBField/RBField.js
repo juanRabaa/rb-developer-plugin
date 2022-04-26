@@ -107,7 +107,6 @@ export default function RBField(props){
             { fieldType === "single" &&
                 <SingleField
                     {...singleProps}
-                    // TODO: components prop mapping? not all components manages onChange the same way
                 />
             }
             <input type="hidden" name={name} value={JSON.stringify(value)}/>

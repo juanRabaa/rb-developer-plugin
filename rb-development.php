@@ -37,7 +37,7 @@ if ( ! defined( 'WPINC' ) ) {
 // TODO: Conditionally show/hide fields.
 // TODO: Allow to pass static html string as component to show information instead of controls
 // TODO: Documentation. Repeater (collapsible/accordion/title/dynamic title). Group (force group)
-// TODO: Fix bug. Cant save repeater field whit null value in any of the indexes.
+// TODO: Fix bug. Cant save repeater field with null value in any of the indexes.
 
 // React meta values component (single, group, repeater)
 // Generate posts meta boxes using react with wordpress hooks
@@ -45,6 +45,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 define("RB_DEVELOPER_PLUGIN_PATH", plugin_dir_path(__FILE__));
 define("RB_DEVELOPER_PLUGIN_CLASSES", plugin_dir_path(__FILE__) . "inc/classes");
+define("RB_DEVELOPER_PLUGIN_TRAITS", plugin_dir_path(__FILE__) . "inc/traits");
 define("RB_DEVELOPER_PLUGIN_DIST_SCRIPTS", plugin_dir_url(__FILE__) . "js/dist/scripts");
 
 require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Custom_Fields.php" );

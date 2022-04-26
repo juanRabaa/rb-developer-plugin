@@ -74,25 +74,28 @@ class RB_Custom_Fields{
                 $item_schema = RB_Custom_Fields::generate_field_schema($field_config);
             }
         }
-        // If there is only one field in the fields array. If the field has the `name` key, it will be forced into a group in the next condition
-        else if( count($fields) === 1 && !isset($fields[0]["name"]) ){
-            $field_config = $fields[0];
-            $item_schema = RB_Custom_Fields::generate_field_schema($field_config);
-        }
-        // If multiple fields, or only one with the `name` key, that forces it to a group
-        else if( count($fields) > 1 || ( count($fields) === 1 && isset($fields[0]["name"]) ) ){
-            $properties = array();
-
-            foreach ($fields as $field_config) {
-                $properties[$field_config["name"]] = RB_Custom_Fields::generate_field_schema($field_config);
+        else if(is_array($fields)){
+            // If there is only one field in the fields array. If the field has the `name` key, it will be forced into a group in the next condition
+            if( count($fields) === 1 && !isset($fields[0]["name"]) ){
+                $field_config = $fields[0];
+                $item_schema = RB_Custom_Fields::generate_field_schema($field_config);
             }
+            // If multiple fields, or only one with the `name` key, that forces it to a group
+            else if( count($fields) > 1 || ( count($fields) === 1 && isset($fields[0]["name"]) ) ){
+                $properties = array();
 
-            $item_schema = array(
-                "type"                      => "object",
-                "properties"                => $properties,
-                // "additionalProperties"      => $additionalProperties,
-            );
+                foreach ($fields as $field_config) {
+                    $properties[$field_config["name"]] = RB_Custom_Fields::generate_field_schema($field_config);
+                }
+
+                $item_schema = array(
+                    "type"                      => "object",
+                    "properties"                => $properties,
+                    // "additionalProperties"      => $additionalProperties,
+                );
+            }
         }
+
 
         if($field_data["repeater"]){
             $schema = array(

@@ -4,7 +4,6 @@ import styles from './styles.module.scss';
 import RepeaterFieldItem from "COMPONENTS/RepeaterFieldItem";
 import RepeaterSortableItemsList from 'COMPONENTS/RepeaterSortableItemsList';
 
-// TODO: Sortable
 // TODO: Option to generate the items in tabs instead of list items
 // TODO: Should collapsible options be inside one general key `collapse`?
 export default function RepeaterField(props){
