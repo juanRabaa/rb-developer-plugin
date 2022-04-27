@@ -1,21 +1,30 @@
 <?php
 require_once( RB_DEVELOPER_PLUGIN_TRAITS . "/RB_Meta_Field.php" );
+require_once( RB_DEVELOPER_PLUGIN_TRAITS . "/Initializer.php" );
 
 // TODO: This should also be able to show controls or information in the post list table
 class RB_Post_Meta_Field{
-    use RB_Meta_Fields;
+    use Initializer;
+    use RB_Meta_Field;
 
-    static protected function set_post_meta_field_props(){
-        self::$object_type = "post";
-        self::$object_subtype = "post_type";
-        self::$default_object_subtype = "post";
-        self::$rest_vars = array(
-            "namespace"             => "postsMetaFields",
-            "object_subtype"        => "postType",
+    static protected function on_init(){
+        self::generate_fields_manager();
+    }
+
+    static protected function get_field_manager_config(){
+        return array(
+            "object_type"                  => "post",
+            "object_subtype"               => "post_type",
+            "default_object_subtype"       => "post",
+            "rest_vars"                    => array(
+                "namespace"             => "postsMetaFields",
+                "object_subtype"        => "postType",
+            ),
+            "filter_field_config"       => array(self::class, "filter_field_config"),
         );
     }
 
-    static protected function parse_object_type_args($args){
+    static public function filter_field_config($field_config){
         $default_args = array(
             "panel"                 => array(),
         );
@@ -26,13 +35,10 @@ class RB_Post_Meta_Field{
             "icon"      => "plugins"
         );
 
-        $config = array_merge($default_args, $args);
-        $config['panel']  = array_merge($panel_args, $config["panel"]);
+        $field_config = array_merge($default_args, $field_config);
+        $field_config['panel']  = array_merge($panel_args, $field_config["panel"]);
 
-        if(self::field_exists($config["meta_key"], $config["post_type"]))
-            wp_die( "A field with the name <b>{$config["meta_key"]}</b> already exists", "Error while registering post meta field" );
-
-        return $config;
+        return $field_config;
     }
 
     /**

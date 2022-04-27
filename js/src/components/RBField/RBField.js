@@ -44,7 +44,7 @@ export default function RBField(props){
     };
 
     const fieldData = {
-        depth: parent ? parent.depth + 1 : 1,
+        depth: parent ? parent.depth + 1 : 0,
     };
 
     const commonProps = {
@@ -109,7 +109,10 @@ export default function RBField(props){
                     {...singleProps}
                 />
             }
-            <input type="hidden" name={name} value={JSON.stringify(value)}/>
+
+            { fieldData.depth === 0 && // We don't generate hidden input for inner fields as the only one we care about is the main one
+                <input type="hidden" name={name} value={JSON.stringify(value)}/>
+            }
         </div>
     );
 }
