@@ -4,7 +4,7 @@ import parseObjectPropNames from "HELPERS/parseObjectPropNames";
 *   Changes the PHP field data keys into the keys accepted by the JS components
 *   The fieldData is modified directly.
 */
-export default function pasePHPFieldData(fieldData){
+export default function parsePHPFieldData(fieldData){
     const fieldPropsMapping = {
         "default_value": "defaultValue",
     };
@@ -28,7 +28,7 @@ export default function pasePHPFieldData(fieldData){
     // Parse child fields data
     if( fieldData?.fields?.length ){
         fieldData.fields.forEach(( childFieldData, i ) => {
-            pasePHPFieldData(childFieldData);
+            parsePHPFieldData(childFieldData);
         });
     }
 

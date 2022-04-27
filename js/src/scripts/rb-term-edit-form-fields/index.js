@@ -1,7 +1,7 @@
 import { render } from "react-dom";
 import React from "react";
 import RBFinalField from 'COMPONENTS/RBFinalField';
-import pasePHPFieldData from "HELPERS/pasePHPFieldData";
+import parsePHPFieldData from "HELPERS/parsePHPFieldData";
 import $ from 'jquery';
 const apiFetch = wp.apiFetch;
 
@@ -20,7 +20,7 @@ async function render_fields(){
         if(registeredTermMetaFields){
             Object.keys(registeredTermMetaFields).forEach((metaKey) => {
                 const termMetaFieldConfig = registeredTermMetaFields[metaKey];
-                const fieldData = pasePHPFieldData(termMetaFieldConfig.field);
+                const fieldData = parsePHPFieldData(termMetaFieldConfig.field);
                 const $rowPlaceholder = $(`#rb-field-placeholder__${metaKey}`);
                 let metaValue = JSON.parse($rowPlaceholder.attr("data-value"));
                 render(<RBFinalField {...fieldData } value={metaValue} />, $rowPlaceholder[0]);

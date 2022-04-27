@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PostMetaField from 'COMPONENTS/PostMetaField';
 import RBField from 'COMPONENTS/RBField';
-import pasePHPFieldData from "HELPERS/pasePHPFieldData";
+import parsePHPFieldData from "HELPERS/parsePHPFieldData";
 const apiFetch = wp.apiFetch;
 const { registerPlugin } = wp.plugins;
 const { PluginDocumentSettingPanel, PluginSidebar } = wp.editPost;
@@ -52,7 +52,7 @@ const RBPostMetaFields = () => {
     if(registeredPostMetaFields){
         Object.keys(registeredPostMetaFields).forEach((metaKey) => {
             const postMetaFieldConfig = registeredPostMetaFields[metaKey];
-            const fieldData = pasePHPFieldData(postMetaFieldConfig.field);
+            const fieldData = parsePHPFieldData(postMetaFieldConfig.field);
 
             const PositionComponent = getPositionComponent(postMetaFieldConfig);
             fields.push(
