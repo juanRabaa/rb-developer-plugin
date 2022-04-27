@@ -9,6 +9,21 @@ class RB_Post_Meta_Field{
 
     static protected function on_init(){
         self::generate_fields_manager();
+
+        // Only on screen with gutenberg editor
+        add_action( 'current_screen', array(self::class, "on_editor_screen") );
+    }
+
+    static public function on_editor_screen(){
+        if(get_current_screen()->is_block_editor()){
+            add_action( 'admin_enqueue_scripts', array(self::class, "enqueue_editor_scripts") );
+        }
+    }
+
+    static public function enqueue_editor_scripts($hook){
+        if ( $hook !== "post.php" )
+                return;
+        wp_enqueue_script( 'rb-post-meta-fields', RB_DEVELOPER_PLUGIN_DIST_SCRIPTS . "/rb-post-meta-fields/index.min.js", ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-plugins', 'wp-edit-post'], false );
     }
 
     static protected function get_field_manager_config(){

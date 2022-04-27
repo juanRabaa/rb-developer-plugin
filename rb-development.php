@@ -50,22 +50,10 @@ define("RB_DEVELOPER_PLUGIN_DIST_SCRIPTS", plugin_dir_url(__FILE__) . "js/dist/s
 
 require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Custom_Fields.php" );
 require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Post_Meta_Field.php" );
-require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Term_Meta_Field.php" );
+require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Term_Meta_Fields.php" );
 
 
 RB_Post_Meta_Field::init();
-RB_Term_Meta_Field::init();
+RB_Term_Meta_Fields::init();
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/post-meta-fields.php" );
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/term-meta-fields.php" );
-
-// TODO: This scripts should only be enqueued when needed, see comments for each
-// Post meta fields scripts
-add_action( 'admin_enqueue_scripts', function(){
-	// In post edit screen (with gutenberg editor)
-	wp_enqueue_script( 'rb-post-meta-fields', RB_DEVELOPER_PLUGIN_DIST_SCRIPTS . "/rb-post-meta-fields/index.min.js", ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-plugins', 'wp-edit-post'], false );
-	// ONLY ON TERM FORM PAGE
-	wp_enqueue_script( 'rb-term-edit-form-fields', RB_DEVELOPER_PLUGIN_DIST_SCRIPTS . "/rb-term-edit-form-fields/index.min.js", ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-plugins', 'wp-edit-post'], false );
-	// OUTSIDE EDITOR SCRIPTS
-	wp_enqueue_style("wp-components");
-	wp_enqueue_style("wp-editor");
-} );
