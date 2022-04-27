@@ -1,5 +1,8 @@
 <?php
 
+// TODO: there should be a wrapper around the get_meta function that fetched custom
+// metas created with this functionalities, that way we can return, for example, default
+// values.
 class RB_Meta_Fields_Manager{
     protected $meta_fields = array();
     protected $object_type = ""; //post, term, etc

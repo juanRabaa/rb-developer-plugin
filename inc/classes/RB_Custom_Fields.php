@@ -1,16 +1,5 @@
 <?php
-
-
 class RB_Custom_Fields{
-    static private $initialized = false;
-
-    static public function init(){
-        if(self::$initialized)
-            return;
-
-        self::$initialized = true;
-    }
-
     /**
     *   Automates the schema for groups and repeaters.
     *   Is independent of the object type managed (post, term, customizer, etc).

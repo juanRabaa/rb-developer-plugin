@@ -15,18 +15,37 @@ class RB_Term_Meta_Fields{
         self::generate_fields_manager();
 
         add_action( 'admin_enqueue_scripts', array(self::class, "enqueue_admin_scripts") );
-        add_filter( 'wp_update_term_data', array(self::class, "save_term_metas"), 10, 4 );
+        add_filter( 'wp_update_term_data', array(self::class, "update_meta_on_term_update"), 10, 4 );
+        add_action( 'created_term', array(self::class, "set_new_term_meta"), 10, 3 );
     }
 
     static public function enqueue_admin_scripts($hook){
-        if ( $hook !== "term.php" )
-                return;
-        wp_enqueue_script( "rb-term-edit-form-fields", RB_DEVELOPER_PLUGIN_DIST_SCRIPTS . "/rb-term-edit-form-fields/index.min.js", ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-plugins', 'wp-edit-post'], false );
-    	wp_enqueue_style("wp-components");
-    	wp_enqueue_style("wp-editor");
+        wp_enqueue_style("wp-components");
+        wp_enqueue_style("wp-editor");
+
+        if ( $hook === "term.php" ){
+            wp_enqueue_script( "rb-term-edit-form-fields", RB_DEVELOPER_PLUGIN_DIST_SCRIPTS . "/rb-term-edit-form-fields/index.min.js", ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-plugins', 'wp-edit-post'], false );
+        }
+        else if ( $hook === "edit-tags.php" ){
+            wp_enqueue_script( "rb-term-creation-form-fields", RB_DEVELOPER_PLUGIN_DIST_SCRIPTS . "/rb-term-creation-form-fields/index.min.js", ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-plugins', 'wp-edit-post'], false );
+        }
     }
 
-    static public function save_term_metas($data, $term_id, $taxonomy, $args){
+    static public function set_new_term_meta($term_id, $tt_id, $taxonomy){
+        // The only hook available after the term is succesfully inserted in the
+        // db in the `wp_insert_term` function doesn't receive the $data used
+        // in the creation, so we pass as $args to `self::update_meta` the $_POST
+        // variable that contains every field in the creation form, including custom
+        // fields.
+        self::update_meta($term_id, $taxonomy, $_POST);
+    }
+
+    static public function update_meta_on_term_update($data, $term_id, $taxonomy, $args){
+        self::update_meta($term_id, $taxonomy, $args);
+        return $data;
+    }
+
+    static public function update_meta($term_id, $taxonomy, $args){
         $meta_fields = self::get_registered_fields()[$taxonomy] ?? [];
         $term_meta_manager = new WP_REST_Terms_Controller($taxonomy);
         $meta = new WP_REST_Term_Meta_Fields( $taxonomy );
@@ -47,8 +66,6 @@ class RB_Term_Meta_Fields{
                 // return $meta_update;
             }
         }
-
-        return $data;
     }
 
     static protected function get_field_manager_config(){

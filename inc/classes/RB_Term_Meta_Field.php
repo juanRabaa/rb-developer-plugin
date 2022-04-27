@@ -31,7 +31,7 @@ class RB_Term_Meta_Field{
             <th scope="row" valign="top"><label for="meta_key"><?php echo $title; ?></label></th>
             <td>
                 <div id="rb-field-placeholder__<?php echo esc_attr($this->field_config["meta_key"]); ?>" data-value="<?php echo esc_attr( json_encode($meta_val) ); ?>">
-                    Loading...
+                    <p><span class="spinner is-active"></span>Loading</p>
                 </div>
             </td>
         </tr>
@@ -43,8 +43,8 @@ class RB_Term_Meta_Field{
         ?>
         <div class="form-field rb-tax-form-field">
             <label for="tag-description"><?php echo $title; ?></label>
-            <div id="rb-tax-field-placeholder">
-                Loading...
+            <div id="rb-tax-field-placeholder__<?php echo esc_attr($this->field_config["meta_key"]); ?>">
+                <p><span class="spinner is-active"></span>Loading</p>
             </div>
         </div>
         <?php
