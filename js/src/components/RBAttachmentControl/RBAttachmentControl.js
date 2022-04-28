@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-const { MediaUpload, MediaUploadCheck } = wp.blockEditor;
+import MediaUploadCheck from "COMPONENTS/MediaUploadCheck";
+const { MediaUpload, MediaUploadCheck: BlockEditorMediaUploadCheck  } = wp.blockEditor;
 const { __ } = wp.i18n;
 const { useSelect } = wp.data;
 const { Button, Spinner, ResponsiveWrapper } = wp.components;
@@ -53,8 +54,7 @@ export default function RBAttachmentControl(props){
 
         return labels;
     }
-
-
+    
     const labels = getLabels();
     const attachments = useSelect( ( select, props ) => {
         const { getMedia } = select( 'core' );

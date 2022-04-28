@@ -22,6 +22,7 @@ class RB_Term_Meta_Fields{
     static public function enqueue_admin_scripts($hook){
         wp_enqueue_style("wp-components");
         wp_enqueue_style("wp-editor");
+        wp_enqueue_media();
 
         if ( $hook === "term.php" ){
             wp_enqueue_script( "rb-term-edit-form-fields", RB_DEVELOPER_PLUGIN_DIST_SCRIPTS . "/rb-term-edit-form-fields/index.min.js", ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-plugins', 'wp-edit-post'], false );

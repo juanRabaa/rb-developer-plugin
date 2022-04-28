@@ -1,9 +1,7 @@
 <?php
 
-// TODO: there should be a wrapper around the get_meta function that fetched custom
-// metas created with this functionalities, that way we can return, for example, default
-// values.
 class RB_Meta_Fields_Manager{
+    static protected $fields_managers = array();
     protected $meta_fields = array();
     protected $object_type = ""; //post, term, etc
     protected $object_subtype = ""; //post_type, taxonomy, etc
@@ -33,7 +31,28 @@ class RB_Meta_Fields_Manager{
         $this->default_object_subtype = $config["default_object_subtype"]; // post, porfolio, etc
         $this->rest_vars = array_merge( $this->rest_vars, $config["rest_vars"] ?? [] );
         $this->filter_field_config = $config["filter_field_config"] ?? null;
+        // $this->get_object = $config["get_object"] ?? null;
+        // $this->get_object_subtype = $config["get_object_subtype"] ?? null;
         $this->register_rest_routes();
+        self::$fields_managers[$config["object_type"]] = $this;
+    }
+
+    // TODO: there should be a wrapper around the get_meta function that fetched custom
+    // metas created with this functionalities, that way we can return, for example, default
+    // values.
+    // https://developer.wordpress.org/reference/functions/get_metadata_default/
+    // https://developer.wordpress.org/reference/functions/get_metadata/
+    // protected function filter_meta_value(){
+    //     add_filter( "default_{$this->object_type}_metadata", function($value, $object_id, $meta_key, $single, $meta_type){
+    //         if(!is_callable($this->get_object) || !is_callable($this->get_object_subtype))
+    //             return;
+    //         $object = call_user_func($this->get_object, $object_id);
+    //         $object = call_user_func($this->get_object_subtype, $object_id);
+    //         return $value;
+    //     } );
+    // }
+
+    static public function get_metadata($object_type, $object_subtype, $meta_key, $default, $single){
     }
 
     public function get_registered_meta_fields(){
