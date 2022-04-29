@@ -7,6 +7,7 @@ import parseObjectPropNames from "HELPERS/parseObjectPropNames";
 export default function parsePHPFieldData(fieldData){
     const fieldPropsMapping = {
         "default_value": "defaultValue",
+        "component_props": "componentProps",
     };
 
     const repeaterPropsMapping = {

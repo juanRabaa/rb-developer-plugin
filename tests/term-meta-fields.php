@@ -62,7 +62,7 @@ RB_Term_Meta_Fields::add_field(array(
         // "label"         => "Test Single",
         // "description"   => "Test Single",
         "component"         => "attachments",
-        "componentProps"    => array(
+        "component_props"    => array(
             "gallery"   => true,
             "labels"    => array(
                 "remove"        => "Remover imagenes",

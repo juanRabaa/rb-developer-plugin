@@ -79,7 +79,7 @@ $test_fields_data = array(
                 "type"  => "integer",
             ),
             "component"     => "attachments",
-            "componentProps"    => array(
+            "component_props"    => array(
                 "gallery"   => true,
             ),
         ),
@@ -89,7 +89,7 @@ $test_fields_data = array(
             "type"              => "string",
             "component"         => "ColorPalette",
             "default_value"     => "#fff",
-            "componentProps"    => array(
+            "component_props"    => array(
                 "colors"    => array(
                     array( "name"  => "red", "color"    => "#f00" ),
                     array( "name"  => "white", "color"  => "#fff" ),
@@ -102,7 +102,7 @@ $test_fields_data = array(
             "label"             => "Slider type",
             "component"         => "RadioControl",
             "defaultValue"      => "second",
-            "componentProps"    => array(
+            "component_props"    => array(
                 "min"   => 10,
                 "max"   => 20,
                 // "label" => "Slider type",
