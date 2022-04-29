@@ -9,7 +9,7 @@ const apiFetch = wp.apiFetch;
 function cleanFieldValue({ value, setValue }){
     $('#submit').on( 'click', function(){
         const form = $(this).parents('form');
-        if(validateForm(form));
+        if(validateForm(form))
             setValue(null);
     });
 }

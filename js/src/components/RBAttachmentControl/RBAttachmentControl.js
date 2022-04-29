@@ -6,6 +6,8 @@ const { useSelect } = wp.data;
 const { Button, Spinner, ResponsiveWrapper } = wp.components;
 import './styles.scss';
 
+// TODO: What happends if an attachment is removed from the gallery but it is in the
+// value passed? should show warning?
 /**
 *   @param {int[]} attachmentsIDs                                               Array of attachments ids. If its not a gallery, only the first index is used
 *   @param {bool} gallery                                                       Indicates if multiple attachments can be selected.
@@ -50,11 +52,11 @@ export default function RBAttachmentControl(props){
             labels = singleDefaultLabels;
 
         if(passedLabels)
-            labels = {...labels, passedLabels};
+            labels = {...labels, ...passedLabels};
 
         return labels;
     }
-    
+
     const labels = getLabels();
     const attachments = useSelect( ( select, props ) => {
         const { getMedia } = select( 'core' );
@@ -73,9 +75,12 @@ export default function RBAttachmentControl(props){
     const mediaComponentValue = gallery ? attachmentsIDs : attachmentsIDs?.[0];
 
     const doOnChange = (attachments) => {
+        let newAttachments = [];
+        if(attachments)
+            newAttachments = gallery ? attachments?.map(({id}) => id)  : [attachments.id];
         if(onChange)
             onChange({
-                attachments: gallery ? attachments?.map(({id}) => id)  : [attachments.id],
+                attachments: newAttachments,
             });
     }
 
@@ -116,7 +121,7 @@ export default function RBAttachmentControl(props){
                     ) }
                 />
             </MediaUploadCheck>
-            { !! attachmentsIDs &&
+            { (attachmentsIDs?.length > 0) &&
             <MediaUploadCheck>
                 <Button onClick={ () => doOnChange(null) } isLink isDestructive>
                     { labels.remove }
