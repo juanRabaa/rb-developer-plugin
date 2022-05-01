@@ -116,9 +116,6 @@ export default function RepeaterField(props){
                 <div className="empty-repeater-message">
                     <p>{labels.empty}</p>
                 </div>
-                <div className={`${styles.addButtonContainer} add-button-container`}>
-                    <Icon icon="plus" className={styles.addBtn} onClick={addItem} />
-                </div>
             </>
         );
     }
@@ -142,15 +139,15 @@ export default function RepeaterField(props){
                 <RepeaterTabs {...itemsComponentProps} />
             );
         }
-        else if(sortable){
-            return (
-                <RepeaterList {...itemsComponentProps}
-                    collapse={collapse}
-                    collapseOpen={collapseOpen}
-                    accordion={accordion}
-                />
-            );
-        }
+
+        return (
+            <RepeaterList
+                {...itemsComponentProps}
+                collapse={collapse}
+                collapseOpen={collapseOpen}
+                accordion={accordion}
+            />
+        );
     }
 
     return (

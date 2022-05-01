@@ -16,7 +16,7 @@ import {
   restrictToVerticalAxis,
   restrictToWindowEdges,
 } from '@dnd-kit/modifiers';
-import { SortableRepeaterFieldItem } from "./RepeaterFieldItem";
+import RepeaterFieldItem from "./RepeaterFieldItem";
 
 export default function RepeaterSortableItemsList(props){
     const {
@@ -24,6 +24,7 @@ export default function RepeaterSortableItemsList(props){
         items,
         handleDragEnd: passedHandleDragEnd,
         handleDragStart,
+        sortable,
      } = props;
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -58,26 +59,38 @@ export default function RepeaterSortableItemsList(props){
         });
     }
 
-    return (
-        <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragStart={(event) => handleDragStart({ event, items })}
-            onDragEnd={(event) => handleDragEnd({ event, items })}
-            modifiers={[restrictToVerticalAxis]}
-        >
-            <SortableContext
-              items={items}
-              strategy={verticalListSortingStrategy}
+    const ItemsWrapper = ({children}) => {
+        if(!sortable)
+            return <>{children}</>;
+
+        return (
+            <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragStart={(event) => handleDragStart({ event, items })}
+                onDragEnd={(event) => handleDragEnd({ event, items })}
+                modifiers={[restrictToVerticalAxis]}
             >
-                {items.map(({id, itemProps}) =>
-                    <SortableRepeaterFieldItem
-                        key={id}
-                        id={id}
-                        itemProps={itemProps}
-                    />
-                )}
-            </SortableContext>
-        </DndContext>
+                <SortableContext
+                    items={items}
+                    strategy={verticalListSortingStrategy}
+                >
+                    {children}
+                </SortableContext>
+            </DndContext>
+        );
+    };
+
+
+    return (
+        <ItemsWrapper>
+            {items.map(({id, itemProps}) =>
+                <RepeaterFieldItem
+                    {...itemProps}
+                    key={id}
+                    id={id}
+                />
+            )}
+        </ItemsWrapper>
     );
 }

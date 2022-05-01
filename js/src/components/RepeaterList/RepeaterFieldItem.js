@@ -10,6 +10,7 @@ export default function RepeaterFieldItem(props){
         name,
         value,
         index,
+        id,
         onChange,
         removeItem,
         fieldProps,
@@ -17,12 +18,34 @@ export default function RepeaterFieldItem(props){
         onCollapseTriggerClick,
         open,
         initialOpen,
-        containerProps = {},
-        headerProps = {},
         title,
     } = props;
 
     const [collapseOpen, setCollapseOpen] = useState(initialOpen);
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+    } = useSortable({
+        id
+    });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
+
+    const containerProps = {
+        ref: setNodeRef,
+        style,
+    };
+
+    const headerProps = {
+        ...attributes,
+        ...listeners,
+    };
 
     const collapseTriggerClicked = () => {
         if(!collapse)
@@ -63,33 +86,4 @@ export default function RepeaterFieldItem(props){
 
         </div>
     );
-}
-
-export function SortableRepeaterFieldItem({ id, itemProps }) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-  } = useSortable({id});
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
-  const containerProps = {
-      ref: setNodeRef,
-      style,
-  };
-
-  const headerProps = {
-      ...attributes,
-      ...listeners,
-  };
-
-  return (
-      <RepeaterFieldItem containerProps={containerProps} headerProps={headerProps} {...itemProps}/>
-  );
 }

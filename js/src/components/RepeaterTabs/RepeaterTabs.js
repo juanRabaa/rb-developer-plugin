@@ -1,4 +1,5 @@
-const { useState, useEffect } = wp.element;
+const { useState } = wp.element;
+const { Icon } = wp.components;
 import RBField from 'COMPONENTS/RBField';
 import TabsNav from "COMPONENTS/TabsNav";
 
@@ -19,7 +20,6 @@ export default function RepeaterTabs({ items: passedItems, addItem, maxReached, 
         if(!changed)
             return;
         const newValue = arrayMove(value, oldIndex, newIndex);
-        console.log("ON SORT", oldIndex, newIndex);
         onChange({ value: newValue });
     };
 
@@ -31,7 +31,20 @@ export default function RepeaterTabs({ items: passedItems, addItem, maxReached, 
             onSort={onSort}
             generateTabContent={ ({ index, tab }) => {
                 if(isEmpty){
-                    return getEmptyMessage();
+                    return (
+                        <>
+                            {getEmptyMessage()}
+                            <div className={`add-button-container`}>
+                                <Icon icon="plus" className="" onClick={addItem} style={{
+                                    width: "max-content",
+                                    margin: "0 auto",
+                                    cursor: "pointer",
+                                    display: "block",
+                                }}/>
+                            </div>
+                        </>
+                    )
+                    return ;
                 }
 
                 if(!tab)

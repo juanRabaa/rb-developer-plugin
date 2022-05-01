@@ -55,39 +55,36 @@ export default function RepeaterList({
         };
     });
 
-    if(sortable){
-        return (
-            <div className={`${styles.repeaterList} ${accordion ? styles.accordion : ''}`}>
-                <div className={styles.repeaterItems}>
-                    <RepeaterSortableItemsList
-                        value = {value}
-                        items = {items}
-                        handleDragStart = { () => {
-                            setForceCollapseOpen(false);
-                        }}
-                        handleDragEnd = { ({value, changed}) => {
-                            setForceCollapseOpen(null);
-                            if(changed){
-                                forceRefresh();
-                                onChange({ value });
-                            }
-                        } }
-                    />
-                    {isEmpty && getEmptyMessage()}
-                </div>
-                { maxReached &&
-                <div className="max-reached-info">
-                    <p>{labels.maxReached}</p>
-                </div>
-                }
-                { !maxReached &&
-                <div className={`${styles.addButtonContainer} add-button-container`}>
-                    <Icon icon="plus" className={styles.addBtn} onClick={addItem} />
-                </div>
-                }
+    return (
+        <div className={`${styles.repeaterList} ${accordion ? styles.accordion : ''}`}>
+            <div className={styles.repeaterItems}>
+                <RepeaterSortableItemsList
+                    value = {value}
+                    items = {items}
+                    handleDragStart = { () => {
+                        setForceCollapseOpen(false);
+                    }}
+                    sortable = {sortable}
+                    handleDragEnd = { ({value, changed}) => {
+                        setForceCollapseOpen(null);
+                        if(changed){
+                            forceRefresh();
+                            onChange({ value });
+                        }
+                    } }
+                />
+                {isEmpty && getEmptyMessage()}
             </div>
-        );
-    }
-
-    return items.map( ({id, itemProps}) => <RepeaterFieldItem key={id} {...itemProps}/> );
+            { maxReached &&
+            <div className="max-reached-info">
+                <p>{labels.maxReached}</p>
+            </div>
+            }
+            { !maxReached &&
+            <div className={`${styles.addButtonContainer} add-button-container`}>
+                <Icon icon="plus" className={styles.addBtn} onClick={addItem} />
+            </div>
+            }
+        </div>
+    );
 }
