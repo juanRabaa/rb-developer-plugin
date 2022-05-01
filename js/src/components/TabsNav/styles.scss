@@ -1,0 +1,120 @@
+.rb-tabs-container{
+    > .header {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 7px;
+        padding-left: 10px;
+        margin-left: -10px;
+
+        > .tabs {
+            display: flex;
+            flex: 1;
+            background: #dadadb;
+            border-radius: 10px 0 0 0;
+            height: 33px;
+
+            .tab {
+                background: #dadadb;
+                padding: 6px 10px;
+                white-space: nowrap;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                cursor: pointer;
+                flex: 1;
+                flex-grow: 0.3;
+                user-select: none;
+                /* border-right: solid 1px; */
+                position: relative;
+                border-radius: 0;
+                // transition: border-radius 0.4s, background-color 0.4s, box-shadow 0.4s;
+                border-radius: inherit;
+                border-top-right-radius: 9px;
+
+                &.active {
+                    background: white;
+                    cursor: default;
+                    box-shadow: 1px 3px 4px 2px rgb(0 0 0 / 21%);
+                    margin: 0 -2px;
+                    z-index: 2;
+                    border-right: 0;
+                    padding: 6px 12px;
+
+                    &:first-child{
+                        margin-left: 0;
+                        padding-left: 10px;
+                    }
+
+                    &:last-child{
+                        margin-right: 0;
+                        padding-right: 10px;
+                    }
+                }
+
+                .close-btn {
+                    cursor: pointer;
+
+                    .dashicon {
+                        font-size: 16px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 50%;
+
+                        &:hover {
+                            background: #73737342;
+                        }
+                    }
+                }
+
+                .tab-title {
+                    margin-top: 0;
+                }
+
+                &:not(.active):after {
+                    content: "";
+                    display: block;
+                    height: 65%;
+                    width: 1px;
+                    background: #00000054;
+                    position: absolute;
+                    right: 0;
+                    top: 17%;
+                }
+            }
+        }
+
+        > .controls {
+            align-self: stretch;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #d9d9d9;
+            padding: 0 10px;
+
+            .add-tab {
+                cursor: pointer;
+                border-radius: 50%;
+                font-size: 9px;
+
+                &:hover {
+                    background: #73737342;
+                }
+
+                .dashicon {
+                    font-size: 12px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            }
+        }
+    }
+
+    > .current-tab-content {
+        z-index: 2;
+        position: relative;
+        background: #fff;
+        padding: 10px;
+    }
+}

@@ -1,76 +1,9 @@
-.repeaterField{
-    > .addButtonContainer{
-        display: flex;
-        align-items: center;
-        justify-content: center;
+.addButtonContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-        .addBtn {
-            cursor: pointer;
-        }
-    }
-
-    > .repeaterItems {
-        > .repeaterItem {
-            margin-bottom: 1rem;
-            position: relative;
-            background-color: #fff;
-            border: solid 1px;
-
-            > .itemHeader {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 12px;
-                user-select: none;
-
-                &.collapse{
-                    cursor: pointer;
-                }
-
-                .itemTitle{
-                    flex-grow: 1;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    overflow: hidden;
-                }
-
-                .actions{
-                    .trashIcon {
-                        cursor: pointer;
-                    }
-                }
-            }
-
-            > .itemContent{
-                padding: 12px;
-                border-top: solid 1px;
-            }
-        }
-    }
-
-
-    &.accordion {
-        > .repeaterItems {
-            > .repeaterItem {
-                margin-bottom: 0;
-
-                &:not(:last-child){
-                    border-bottom: 0;
-                }
-
-                &:last-child{
-                    margin-bottom: 1rem;
-                }
-
-                > .itemHeader{
-                    // border-bottom: solid 1px #00000029;
-                }
-
-                > .itemContent{
-                    padding: 12px;
-                    // border-top: none;
-                }
-            }
-        }
+    .addBtn {
+        cursor: pointer;
     }
 }

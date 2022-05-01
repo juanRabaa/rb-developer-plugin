@@ -1,4 +1,3 @@
-import { SortableRepeaterFieldItem } from "COMPONENTS/RepeaterFieldItem";
 import {
   DndContext,
   closestCenter,
@@ -17,6 +16,7 @@ import {
   restrictToVerticalAxis,
   restrictToWindowEdges,
 } from '@dnd-kit/modifiers';
+import { SortableRepeaterFieldItem } from "./RepeaterFieldItem";
 
 export default function RepeaterSortableItemsList(props){
     const {

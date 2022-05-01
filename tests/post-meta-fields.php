@@ -1,45 +1,4 @@
 <?php
-
-/**********************************************************
-*   POST META FIELDS TEST
-***********************************************************/
-RB_Post_Meta_Field::add_field(array(
-    // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
-    "meta_key"      => "single_meta_field",
-    "post_type"     => "post",
-    "single"        => true,
-    "panel"         => array(
-        "title"         => "Single Value Field",
-        "icon"          => "format-gallery",
-        "position"      => "document-settings-panel",
-    ),
-    "field"        => array(
-        "type"          => "string",
-        "label"         => "Test Single",
-        "description"   => "Test Single",
-        "component"     => "text",
-    ),
-));
-
-RB_Post_Meta_Field::add_field(array(
-    // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
-    "meta_key"      => "single_meta_field",
-    "post_type"     => "page",
-    "single"        => true,
-    "panel"         => array(
-        "title"         => "Single Value Field",
-        "icon"          => "format-gallery",
-        "position"      => "document-settings-panel",
-    ),
-    "field"        => array(
-        "type"          => "string",
-        "label"         => "Test Single",
-        "description"   => "Test Single",
-        "component"     => "te78xt",
-    ),
-));
-
-
 $test_fields_data = array(
     // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
     "repeater"      => array(
@@ -48,7 +7,8 @@ $test_fields_data = array(
         "collapse_open"         => false,
         "accordion"             => false,
         "sortable"              => true,
-        "max"                   => 6,
+        "max"                   => 10,
+        "layout"                => "list",
         "labels"                => array(
             "empty"         => "No hay galerias cargadas. Empeza ya!",
             "item_title"    => "Gallery (%n)", // Default title of the field ( %n is replaced with the position of the current item)
@@ -124,6 +84,45 @@ $test_fields_data = array(
         ),
     ),
 );
+
+/**********************************************************
+*   POST META FIELDS TEST
+***********************************************************/
+RB_Post_Meta_Field::add_field(array(
+    // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
+    "meta_key"      => "single_meta_field",
+    "post_type"     => "post",
+    "single"        => true,
+    "panel"         => array(
+        "title"         => "Single Value Field",
+        "icon"          => "format-gallery",
+        "position"      => "document-settings-panel",
+    ),
+    "field"        => array(
+        "type"          => "string",
+        "label"         => "Test Single",
+        "description"   => "Test Single",
+        "component"     => "text",
+    ),
+));
+
+RB_Post_Meta_Field::add_field(array(
+    // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
+    "meta_key"      => "single_meta_field",
+    "post_type"     => "page",
+    "single"        => true,
+    "panel"         => array(
+        "title"         => "Single Value Field",
+        "icon"          => "format-gallery",
+        "position"      => "document-settings-panel",
+    ),
+    "field"        => array(
+        "type"          => "string",
+        "label"         => "Test Single",
+        "description"   => "Test Single",
+        "component"     => "te78xt",
+    ),
+));
 
 RB_Post_Meta_Field::add_field(array(
     "meta_key"      => "meta_test",

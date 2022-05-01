@@ -1,9 +1,9 @@
 const { useState, useEffect } = wp.element;
-import RBField from '../RBField';
 import { Icon } from '@wordpress/components';
-import styles from '../RepeaterField/styles.module.scss';
 import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
+import RBField from 'COMPONENTS/RBField';
+import styles from './styles.module.scss';
 
 export default function RepeaterFieldItem(props){
     const {
@@ -12,8 +12,6 @@ export default function RepeaterFieldItem(props){
         index,
         onChange,
         removeItem,
-        dynamicTitle,
-        baseTitle = "Item %n",
         fieldProps,
         collapse,
         onCollapseTriggerClick,
@@ -21,21 +19,10 @@ export default function RepeaterFieldItem(props){
         initialOpen,
         containerProps = {},
         headerProps = {},
+        title,
     } = props;
 
     const [collapseOpen, setCollapseOpen] = useState(initialOpen);
-
-    const getItemTitle = () => {
-        let itemTitle = baseTitle.replaceAll("%n", index + 1);
-
-        if(dynamicTitle && value?.[dynamicTitle]){
-            const fieldValue = value[dynamicTitle].trim();
-            if( fieldValue )
-                itemTitle = fieldValue;
-        }
-
-        return itemTitle;
-    }
 
     const collapseTriggerClicked = () => {
         if(!collapse)
@@ -50,13 +37,12 @@ export default function RepeaterFieldItem(props){
             setCollapseOpen(open);
     }, [open]);
 
-    const itemTitle = getItemTitle();
 
     return (
         <div {...containerProps} className={`${styles.repeaterItem} repeater-item`}>
             <div {...headerProps } className={`${styles.itemHeader} ${collapse ? styles.collapse : ''}`} onClick={ collapseTriggerClicked }>
-                { itemTitle &&
-                    <b className={styles.itemTitle}>{ itemTitle }</b>
+                { title &&
+                    <b className={styles.itemTitle}>{ title }</b>
                 }
                 <div className={styles.actions}>
                     <Icon icon="trash" className={styles.trashIcon} onClick={(e) => {
