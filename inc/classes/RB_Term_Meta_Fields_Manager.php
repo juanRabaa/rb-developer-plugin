@@ -8,7 +8,7 @@ require_once( RB_DEVELOPER_PLUGIN_TRAITS . "/Initializer.php" );
 /**
 *   Enqueues the needed scripts and proccess the meta values on term save
 */
-class RB_Term_Meta_Fields{
+class RB_Term_Meta_Fields_Manager{
     use Initializer;
     use RB_Meta_Field {
         add_field as base_add_field;

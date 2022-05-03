@@ -142,7 +142,7 @@ $test_fields_data = array(
 /**********************************************************
 *   POST META FIELDS TEST
 ***********************************************************/
-RB_Post_Meta_Fields::add_field(array(
+RB_Post_Meta_Fields_Manager::add_field(array(
     // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
     "meta_key"      => "single_meta_field",
     "post_type"     => "post",
@@ -160,7 +160,7 @@ RB_Post_Meta_Fields::add_field(array(
     ),
 ));
 
-RB_Post_Meta_Fields::add_field(array(
+RB_Post_Meta_Fields_Manager::add_field(array(
     // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
     "meta_key"      => "single_meta_field",
     "post_type"     => "page",
@@ -178,7 +178,7 @@ RB_Post_Meta_Fields::add_field(array(
     ),
 ));
 
-RB_Post_Meta_Fields::add_field(array(
+RB_Post_Meta_Fields_Manager::add_field(array(
     "meta_key"      => "meta_test",
     "post_type"     => ["post", "rb_meta_test_postype"],
     "single"        => true,
@@ -191,7 +191,7 @@ RB_Post_Meta_Fields::add_field(array(
     "field"        => $test_fields_data,
 ));
 
-RB_Post_Meta_Fields::add_field(array(
+RB_Post_Meta_Fields_Manager::add_field(array(
     "meta_key"      => "sidebar_test_meta",
     "post_type"     => "post",
     "single"        => true,
@@ -204,7 +204,7 @@ RB_Post_Meta_Fields::add_field(array(
     "field"        => $test_fields_data,
 ));
 
-RB_Post_Meta_Fields::add_field(array(
+RB_Post_Meta_Fields_Manager::add_field(array(
     "meta_key"      => "sidebar_test_meta",
     "post_type"     => "attachment",
     "single"        => true,

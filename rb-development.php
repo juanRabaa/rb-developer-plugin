@@ -51,11 +51,11 @@ define("RB_DEVELOPER_PLUGIN_DIST_SCRIPTS", plugin_dir_url(__FILE__) . "js/dist/s
 
 require_once( RB_DEVELOPER_PLUGIN_INC . "/functions.php" );
 require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Custom_Fields.php" );
-require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Post_Meta_Fields.php" );
-require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Term_Meta_Fields.php" );
+require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Post_Meta_Fields_Manager.php" );
+require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Term_Meta_Fields_Manager.php" );
 
 
-RB_Post_Meta_Fields::init();
-RB_Term_Meta_Fields::init();
+RB_Post_Meta_Fields_Manager::init();
+RB_Term_Meta_Fields_Manager::init();
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/post-meta-fields.php" );
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/term-meta-fields.php" );
