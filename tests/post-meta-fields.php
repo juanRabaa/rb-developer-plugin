@@ -204,6 +204,19 @@ RB_Post_Meta_Fields::add_field(array(
     "field"        => $test_fields_data,
 ));
 
+RB_Post_Meta_Fields::add_field(array(
+    "meta_key"      => "sidebar_test_meta",
+    "post_type"     => "attachment",
+    "single"        => true,
+    "type"          => "object",
+    "panel"         => array(
+        "title"         => "Galerias",
+        "icon"          => "format-gallery",
+        "position"      => "sidebar",
+    ),
+    "field"        => $test_fields_data,
+));
+
 
 
 add_action('init', function(){

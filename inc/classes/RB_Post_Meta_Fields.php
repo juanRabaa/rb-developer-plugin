@@ -18,16 +18,41 @@ class RB_Post_Meta_Fields{
 
         // Only on screen with gutenberg editor
         add_action( 'admin_enqueue_scripts', array(self::class, "enqueue_scripts") );
+        self::manage_regular_post_update();
+        self::manage_attachment();
+    }
+
+    static protected function manage_regular_post_update(){
         add_action( 'save_post', array(self::class, "save_post_metas"), 10, 3 );
     }
 
-    static public function save_post_metas($post_ID, $post, $update){
+    /**
+    *   attachment may look like a post_type, but it doesnt use the `save_post`
+    *   action. Instead we need to hook the meta update logic in the `attachment_updated`
+    *   and the `add_attachment` actions.
+    */
+    static protected function manage_attachment(){
+        add_action( 'attachment_updated', array(self::class, "save_metas_on_attachment_update"), 10, 3 );
+        add_action( 'add_attachment', array(self::class, "save_metas_on_attachment_creation"), 10, 3 );
+    }
+
+    static public function save_metas_on_attachment_update($post_ID, $post_before, $post_after){
+        self::save_post_metas($post_ID, $post_after, $_POST);
+    }
+
+    static public function save_metas_on_attachment_creation($post_ID){
+        self::save_post_metas($post_ID, null, $_POST);
+    }
+
+    static public function save_post_metas($post_ID, $post = null, $values = null){
         // The only hook available after the post is succesfully inserted in the
         // db in the `wp_insert_post` function doesn't receive the $data used
         // in the creation, so we pass as $args to `rb_update_post_meta` the $_POST
         // variable that contains every field in the form, including custom
         // fields.
-        rb_update_post_meta($post_ID, $post->post_type, $_POST);
+        $values = $values ?? $_POST;
+        $post = $post ?? get_post($post_ID);
+        rb_update_post_meta($post_ID, $post->post_type, $values);
     }
 
     static public function enqueue_scripts($hook){
