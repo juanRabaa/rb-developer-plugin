@@ -1,6 +1,8 @@
 <?php
-require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Term_Meta_Field.php" );
 
+/**
+*   Renders the field placeholder in every place a term needs it to be
+*/
 class RB_Term_Meta_Field{
     protected $field_config;
 

@@ -44,16 +44,18 @@ if ( ! defined( 'WPINC' ) ) {
 // Hackly add metaboxes to other places (terms, customizer, menues, attachemnts, etc)
 
 define("RB_DEVELOPER_PLUGIN_PATH", plugin_dir_path(__FILE__));
+define("RB_DEVELOPER_PLUGIN_INC", plugin_dir_path(__FILE__) . "inc");
 define("RB_DEVELOPER_PLUGIN_CLASSES", plugin_dir_path(__FILE__) . "inc/classes");
 define("RB_DEVELOPER_PLUGIN_TRAITS", plugin_dir_path(__FILE__) . "inc/traits");
 define("RB_DEVELOPER_PLUGIN_DIST_SCRIPTS", plugin_dir_url(__FILE__) . "js/dist/scripts");
 
+require_once( RB_DEVELOPER_PLUGIN_INC . "/functions.php" );
 require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Custom_Fields.php" );
-require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Post_Meta_Field.php" );
+require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Post_Meta_Fields.php" );
 require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Term_Meta_Fields.php" );
 
 
-RB_Post_Meta_Field::init();
+RB_Post_Meta_Fields::init();
 RB_Term_Meta_Fields::init();
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/post-meta-fields.php" );
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/term-meta-fields.php" );

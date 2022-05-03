@@ -1,5 +1,12 @@
 <?php
 
+/**
+*   Takes a series of arguments to create a fields manager.
+*   Generates fields and stores them in $meta_fields
+*   Registers the neccessary rest routes
+*   The render and data proccesing is not done here, but where an instance of
+*   this class is used.
+*/
 class RB_Meta_Fields_Manager{
     static protected $fields_managers = array();
     protected $meta_fields = array();
@@ -186,19 +193,25 @@ class RB_Meta_Fields_Manager{
             if(!$field_config["register"])
                 return;
 
-            register_meta(
-                $this->object_type,
-                $field_config["meta_key"],
-                array(
-                    // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
-                    "object_subtype"        => $field_config[$this->object_subtype],
-                    'single'                => $field_config["single"],
-                    'type'                  => $field_schema['type'],
-                    'show_in_rest'          => array(
-                        'schema'    => $field_schema,
+            // The object subtypes the field is releated to (page, post, post_tag, etc) as an array
+            $object_subtypes_vals = is_array($field_config[$this->object_subtype]) ? $field_config[$this->object_subtype] : [$field_config[$this->object_subtype]];
+
+            foreach ($object_subtypes_vals as $object_subtype_val) {
+                register_meta(
+                    $this->object_type,
+                    $field_config["meta_key"],
+                    array(
+                        // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
+                        "object_subtype"        => $object_subtype_val,
+                        'single'                => $field_config["single"],
+                        'type'                  => $field_schema['type'],
+                        'show_in_rest'          => array(
+                            'schema'    => $field_schema,
+                        ),
                     ),
-                ),
-            );
+                );
+            }
+
         });
 
         return $field_config;
