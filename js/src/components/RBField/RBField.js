@@ -1,6 +1,8 @@
+import { useEffect, useRef } from "react";
 import FieldsGroup from 'COMPONENTS/FieldsGroup';
 import SingleField from 'COMPONENTS/SingleField';
 import RepeaterField from 'COMPONENTS/RepeaterField';
+import $ from "jquery";
 
 /**
 *   Works as a factory, generating the right kind of field component (single, group or repeater)
@@ -23,9 +25,24 @@ export default function RBField(props){
         propsMapping,
         parent,
     } = props;
+
+    const valueInputRef = useRef(null);
+    const valueChangeTimes = useRef(0);
     const isSingle = component || (fields?.length === 1 && fields[0].component);
     let fieldType = "single";
     let value = passedValue;
+
+    /**
+    *   Trigger input change on value change
+    *   This makes the field compatible with other js apis that work listening
+    *   to the input change, like the customizer panel, or the media popup attachment
+    *   metas.
+    */
+    useEffect( () => {
+        if(valueInputRef.current && valueChangeTimes.current > 0)
+            $(valueInputRef.current).trigger("change");
+        valueChangeTimes.current = valueChangeTimes.current + 1;
+    }, [value]);
 
     if(!repeater && !isSingle && fields?.length === 1 && !fields[0].name && fields[0].repeater){
         repeater = fields[0].repeater;
@@ -111,48 +128,8 @@ export default function RBField(props){
             }
 
             { fieldData.depth === 0 && // We don't generate hidden input for inner fields as the only one we care about is the main one
-                <input type="hidden" name={name} value={JSON.stringify(value)}/>
+                <input ref={valueInputRef} type="hidden" name={name} value={JSON.stringify(value)} data-rb-main-value/>
             }
         </div>
     );
 }
-
-
-
-/*
-Single
-    Value: singleVal ||  groupVal ||  repeaterVal
-Group (Single*)
-    Value: { valueOne: singleVal, valueTwo: groupVal, valueThree: repeaterVal }
-Repeater
-    Value: (singleVal || groupVal || repeaterVal)[]
-
-Repeater (Group*||Single*||Repeater*)
-
-*/
-
-/*
-RBField({
-    name: "header",
-    repeater: false, // false,true, or json that accepts title and description (mayble collapsible options too)
-    fields: [
-        {
-            name: "title",
-            repeater: false,
-            component: TextInput, // If the component field exists, it doesn't allow the fields field (either single or repeater)
-            default: "This is the header title!",
-        },
-    ],
-})
-
-RBField({
-    name: "metaName",
-    title: "The input title",
-    description: "This input does this thing.",
-    repeater: false,
-    component: TextInput, // If the component field exists, it doesn't allow the fields field (either single or repeater)
-    default: "This is the header title!",
-})
-
-
-*/

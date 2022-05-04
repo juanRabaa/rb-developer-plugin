@@ -32,8 +32,41 @@ class RB_Post_Meta_Fields_Manager{
     *   and the `add_attachment` actions.
     */
     static protected function manage_attachment(){
-        add_action( 'attachment_updated', array(self::class, "save_metas_on_attachment_update"), 10, 3 );
-        add_action( 'add_attachment', array(self::class, "save_metas_on_attachment_creation"), 10, 3 );
+        add_action( "attachment_updated", array(self::class, "save_metas_on_attachment_update"), 10, 3 );
+        add_action( "add_attachment", array(self::class, "save_metas_on_attachment_creation"), 10, 3 );
+        add_filter( "wp_prepare_attachment_for_js", array(self::class, "add_attachment_fields_data"), null, 3);
+        // enqueue media popup field scripts only when the media script is enqueued
+        add_action( "wp_enqueue_media", array(self::class, "enqueue_media_popup_scripts"), null, 0 );
+    }
+
+    static public function enqueue_media_popup_scripts(){
+        wp_enqueue_script( "rb-media-popup-fields", RB_DEVELOPER_PLUGIN_DIST_SCRIPTS . "/rb-media-popup-fields/index.min.js", ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-plugins', 'wp-edit-post'], false );
+    }
+
+    static public function add_attachment_fields_data($response, $attachment, $meta){
+        $placeholder = "";
+        $attachment_fields = self::$fields_manager->get_subtype_fields("attachment");
+        $values = array();
+
+        foreach ($attachment_fields as $meta_key => $field_config) {
+            $meta_val = get_post_meta($attachment->ID, $meta_key, true);
+            $values[$meta_key] = $meta_val;
+            ob_start();
+            ?>
+            <div id="rb-media-field-placeholder__<?php echo esc_attr($meta_key); ?>">
+                <p><span class="spinner is-active"></span>Loading</p>
+            </div>
+            <?php
+            $placeholder .= ob_get_clean();
+        }
+
+        $response["rbfields"] = array(
+            "fields"        => $attachment_fields,
+            "placeholder"   => $placeholder,
+            "values"        => $values,
+        );
+
+        return $response;
     }
 
     static public function save_metas_on_attachment_update($post_ID, $post_before, $post_after){
@@ -58,6 +91,8 @@ class RB_Post_Meta_Fields_Manager{
     static public function enqueue_scripts($hook){
         if ( $hook !== "post.php" && $hook !== "post-new.php" )
                 return;
+
+        wp_enqueue_media();
 
         if(get_current_screen()->is_block_editor()){
             wp_enqueue_script( 'rb-post-meta-fields', RB_DEVELOPER_PLUGIN_DIST_SCRIPTS . "/rb-post-meta-fields/index.min.js", ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-plugins', 'wp-edit-post'], false );

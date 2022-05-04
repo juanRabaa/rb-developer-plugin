@@ -217,6 +217,25 @@ RB_Post_Meta_Fields_Manager::add_field(array(
     "field"        => $test_fields_data,
 ));
 
+RB_Post_Meta_Fields_Manager::add_field(array(
+    // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
+    "meta_key"      => "single_meta_field",
+    "post_type"     => "attachment",
+    "single"        => true,
+    "panel"         => array(
+        "title"         => "Single Value Field",
+        "icon"          => "format-gallery",
+        "position"      => "document-settings-panel",
+    ),
+    "field"        => array(
+        "type"          => "string",
+        "label"         => "Test Single",
+        "description"   => "Test Single",
+        "component"     => "text",
+    ),
+));
+
+
 
 
 add_action('init', function(){

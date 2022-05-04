@@ -5,6 +5,20 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 const hooks = [];
 
 /**
+*   Listens to addition or removal of nodes that matches the querySelector and
+*   mount/unmount the desired component in them as needed.
+*/
+export default function hookComponentToNode(props){
+    const { component, querySelector, removeOldHtml } = props;
+    const hook = props;
+    hooks.push( hook );
+    // Current Elements
+    document.querySelectorAll(querySelector).forEach((node, i) => {
+        renderHook({ node, hook });
+    });
+}
+
+/**
 *   Runs a filter on every node in a tree and runs a callback for every match
 *   @param {Node} node                                                          The first node in the tree
 *   @param {Node} cb                                                            Callback to run on matched nodes
@@ -58,20 +72,6 @@ function renderHook({ node, hook }){
         }),
         node: node,
         removeOldHtml: hook.removeOldHtml,
-    });
-}
-
-/**
-*   Listens to addition or removal of nodes that matches the querySelector and
-*   mount/unmount the desired component in them as needed.
-*/
-export default function hookComponentToNode(props){
-    const { component, querySelector, removeOldHtml } = props;
-    const hook = props;
-    hooks.push( hook );
-    // Current Elements
-    document.querySelectorAll(querySelector).forEach((node, i) => {
-        renderHook({ node, hook });
     });
 }
 

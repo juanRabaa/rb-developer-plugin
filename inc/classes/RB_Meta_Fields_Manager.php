@@ -66,6 +66,10 @@ class RB_Meta_Fields_Manager{
         return $this->meta_fields;
     }
 
+    public function get_subtype_fields($object_subtype){
+        return $this->meta_fields[$object_subtype] ?? [];
+    }
+
     protected function register_rest_routes(){
         if(!$this->rest_vars || !isset($this->rest_vars["namespace"]))
             return;
