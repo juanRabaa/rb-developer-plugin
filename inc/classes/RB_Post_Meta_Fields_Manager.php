@@ -6,6 +6,7 @@ require_once( RB_DEVELOPER_PLUGIN_TRAITS . "/Initializer.php" );
 // TODO: This should also be able to show controls or information in the post list table
 /**
 *   Enqueues the needed scripts and proccess the meta values on post save
+*   Manages the general proccesses for all the fields
 */
 class RB_Post_Meta_Fields_Manager{
     use Initializer;

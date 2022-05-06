@@ -45,3 +45,52 @@ function rb_update_post_meta($post_id, $post_type, $values){
         "values"                            => $values, // meta values to save
     ));
 }
+
+/**
+*   Object lists columns
+*   @see RB_Objects_List_Column::__construct
+*   @param string $id                                                           Id of the column
+*
+*   @param string[]|string $admin_pages                                         String or array of strings representing the slug of the
+*                                                                               wp object screens where to add the new column
+*
+*   @param string $title                                                        Title to show on the column header
+*
+*   @param callback $render_callback                                            The callback that renders the column content. This arguments
+*                                                                               are passed through
+*   {
+*       @param string $column                                                   The column id
+*       @param mixed|int|null $wp_object                                        The wordpress object
+*   }
+*
+*   @param mixed[] $args                                                        Extra arguments. Accepts the following params
+*   {
+*       @param string $cell_class                                               Class for the div containing the cell content
+*
+*       @param int $position                                                    Position of the column on the list. Defaults to the last position
+*                                                                               posible during runtime. First position is 0.
+*
+*       @param callback|null $should_add                                        A function that returns a bool indicating wheter the column should
+*                                                                               be added or not. If the value is null, the column will always be added.
+*   }
+*/
+
+function rb_add_posts_list_column($id, $admin_pages, $title, $render_callback, $args = array()){
+    return new RB_Posts_List_Column($id, $admin_pages, $title, $render_callback, $args);
+}
+
+function rb_add_terms_list_column($id, $admin_pages, $title, $render_callback, $args = array()){
+    return new RB_Terms_List_Column($id, $admin_pages, $title, $render_callback, $args);
+}
+
+
+/**
+*   @see RB_Objects_List_Column::remove
+*/
+function rb_remove_posts_list_column($filter_id, $posts_types, $columns_remove, $args = array()){
+    return RB_Posts_List_Column::remove($filter_id, $posts_types, $columns_remove, $args);
+}
+
+function rb_remove_terms_list_column($filter_id, $taxonomies_names, $columns_remove, $args = array()){
+    return RB_Terms_List_Column::remove($filter_id, $taxonomies_names, $columns_remove, $args);
+}

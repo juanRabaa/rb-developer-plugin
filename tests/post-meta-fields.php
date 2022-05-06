@@ -183,6 +183,10 @@ RB_Post_Meta_Fields_Manager::add_field(array(
     "post_type"     => ["post", "rb_meta_test_postype"],
     "single"        => true,
     "type"          => "object",
+	"column"		=> array(
+		"title"			=> "Columna",
+		// "content"		=> "Columna",
+	),
     "panel"         => array(
         "title"         => "Galerias",
         "icon"          => "format-gallery",

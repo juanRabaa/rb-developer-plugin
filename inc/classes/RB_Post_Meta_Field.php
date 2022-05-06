@@ -2,6 +2,7 @@
 
 /**
 *   Renders the field placeholder in every place a post needs it to be
+*   Manages the specific proccesses for a specific field
 */
 class RB_Post_Meta_Field{
     protected $field_config;
@@ -9,6 +10,7 @@ class RB_Post_Meta_Field{
     public function __construct($field_config){
         $this->field_config = $field_config;
         $this->post_types = is_array($this->field_config["post_type"]) ? $this->field_config["post_type"] : [$this->field_config["post_type"]];
+        $this->setup_list_column();
 
         /**
         *   @deprecated
@@ -18,6 +20,41 @@ class RB_Post_Meta_Field{
         */
         // self::attachment_metaboxes();
         add_action("current_screen", array($this, "on_not_gutenberg") );
+    }
+
+    public function get_column_config(){
+        $config = null;
+        if(isset($this->field_config["column"]) && $this->field_config["column"]){
+            $config = array(
+                "title"     => $this->field_config["panel"]["title"] ?? "",
+                "content"   => null,
+            );
+
+            if(is_array($this->field_config["column"])){
+                $config = array_merge($config, $this->field_config["column"]);
+            }
+        }
+        return $config;
+    }
+
+    public function setup_list_column(){
+        $column = $this->get_column_config();
+        if($column){
+            rb_add_posts_list_column($this->field_config["meta_key"], $this->post_types, $column["title"], function($column, $post){
+                $meta_val = get_post_meta($post->ID, $this->field_config["meta_key"], true);
+                ?>
+                <div class="rb-metabox-placeholder">
+                    <div id="rb-field-col-placeholder__<?php echo esc_attr($this->field_config["meta_key"]); ?>"
+                    data-objectid="<?php esc_attr($post->ID); ?>"
+                    data-value="<?php echo esc_attr( json_encode($meta_val) ); ?>">
+                        <p><span class="spinner is-active"></span>Loading</p>
+                    </div>
+                </div>
+                <?php
+            }, array(
+                "position"  => 2,
+            ));
+        }
     }
 
     // Meta fields are added directly with the wp api on gutenberg, so on no gutenberg

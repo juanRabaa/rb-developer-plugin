@@ -49,10 +49,16 @@ define("RB_DEVELOPER_PLUGIN_CLASSES", plugin_dir_path(__FILE__) . "inc/classes")
 define("RB_DEVELOPER_PLUGIN_TRAITS", plugin_dir_path(__FILE__) . "inc/traits");
 define("RB_DEVELOPER_PLUGIN_DIST_SCRIPTS", plugin_dir_url(__FILE__) . "js/dist/scripts");
 
+require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Filters_Manager.php" );
 require_once( RB_DEVELOPER_PLUGIN_INC . "/functions.php" );
 require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Custom_Fields.php" );
 require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Post_Meta_Fields_Manager.php" );
 require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Term_Meta_Fields_Manager.php" );
+
+// Columns
+require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Objects_List_Column.php" );
+require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Posts_List_Column.php" );
+require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Terms_List_Column.php" );
 
 
 RB_Post_Meta_Fields_Manager::init();
