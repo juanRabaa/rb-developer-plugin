@@ -26,7 +26,7 @@ wp.media.view.RBAttachmentFields = View.extend(/** @lends wp.media.view.Attachme
 	},
 
 	initialize: function() {
-		this.listenTo( this.model, 'change:compat', this.render );
+		this.listenTo( this.model, 'change:rbfields', this.render );
 	},
 	/**
 	 * @return {wp.media.view.AttachmentCompat} Returns itself to allow chaining.
