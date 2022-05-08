@@ -21,7 +21,7 @@ function cleanFieldValue({ value, setValue }){
 async function render_fields(){
     const taxonomy = wp.url.getQueryArg(window.location.href, "taxonomy");
     const registeredTermMetaFields = await apiFetch( {
-        path: `/rb/termsMetaFields/v1/taxonomy/${taxonomy}` ,
+        path: `/rb-fields/v1/taxonomy/${taxonomy}` ,
     } );
     console.log("registeredTermMetaFields", taxonomy, registeredTermMetaFields);
 

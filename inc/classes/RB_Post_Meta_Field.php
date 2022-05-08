@@ -1,16 +1,21 @@
 <?php
+require_once( RB_DEVELOPER_PLUGIN_TRAITS . "/RB_WP_Object_Field.php" );
 
 /**
 *   Renders the field placeholder in every place a post needs it to be
 *   Manages the specific proccesses for a specific field
 */
 class RB_Post_Meta_Field{
+    use RB_WP_Object_Field;
     protected $field_config;
 
     public function __construct($field_config){
         $this->field_config = $field_config;
-        $this->post_types = is_array($this->field_config["post_type"]) ? $this->field_config["post_type"] : [$this->field_config["post_type"]];
-        $this->setup_list_column();
+
+        $this->setup_wp_object_field( array(
+            "object_type"       => "post",
+            "object_subtype"    => "post_type",
+        ));
 
         /**
         *   @deprecated
@@ -22,39 +27,17 @@ class RB_Post_Meta_Field{
         add_action("current_screen", array($this, "on_not_gutenberg") );
     }
 
-    public function get_column_config(){
-        $config = null;
-        if(isset($this->field_config["column"]) && $this->field_config["column"]){
-            $config = array(
-                "title"     => $this->field_config["panel"]["title"] ?? "",
-                "content"   => null,
-            );
-
-            if(is_array($this->field_config["column"])){
-                $config = array_merge($config, $this->field_config["column"]);
-            }
-        }
-        return $config;
-    }
-
-    public function setup_list_column(){
+    protected function setup_list_column(){
         $column = $this->get_column_config();
         if($column){
-            rb_add_posts_list_column($this->field_config["meta_key"], $this->post_types, $column["title"], function($column, $post){
-                $meta_val = get_post_meta($post->ID, $this->field_config["meta_key"], true);
-                ?>
-                <div class="rb-metabox-placeholder">
-                    <div id="rb-field-col-placeholder__<?php echo esc_attr($this->field_config["meta_key"]); ?>"
-                    data-objectid="<?php esc_attr($post->ID); ?>"
-                    data-value="<?php echo esc_attr( json_encode($meta_val) ); ?>">
-                        <p><span class="spinner is-active"></span>Loading</p>
-                    </div>
-                </div>
-                <?php
-            }, array(
-                "position"  => 2,
+            rb_add_posts_list_column($this->get_meta_key(), $this->subtype_kinds, $column["title"], array($this, "render_field_column_content"), array(
+                "position"  => $column["position"],
             ));
         }
+    }
+
+    public function get_object_id($post){
+        return $post->ID ?? null;
     }
 
     // Meta fields are added directly with the wp api on gutenberg, so on no gutenberg
@@ -69,7 +52,7 @@ class RB_Post_Meta_Field{
     *   @deprecated
     */
     protected function attachment_metaboxes(){
-        if(!in_array("attachment", $this->post_types))
+        if(!in_array("attachment", $this->subtype_kinds))
             return;
         add_filter('attachment_fields_to_edit', array($this, "add_media_popup_metaboxes"), null, 2);
     }
@@ -96,7 +79,7 @@ class RB_Post_Meta_Field{
         $title = $this->field_config["panel"]["title"] ?? "";
         $context = $this->field_config["panel"]["context"] ?? "advanced";
 
-        foreach( $this->post_types as $post_type ){
+        foreach( $this->subtype_kinds as $post_type ){
             add_meta_box( "{$this->field_config["meta_key"]}-metabox__$post_type", $title, array($this, "render_metabox"), $post_type, $context );
         }
     }

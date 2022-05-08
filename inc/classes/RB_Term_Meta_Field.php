@@ -1,26 +1,44 @@
 <?php
+require_once( RB_DEVELOPER_PLUGIN_TRAITS . "/RB_WP_Object_Field.php" );
 
 /**
 *   Renders the field placeholder in every place a term needs it to be
 */
 class RB_Term_Meta_Field{
+    use RB_WP_Object_Field;
     protected $field_config;
 
     public function __construct($field_config){
         $this->field_config = $field_config;
-        $this->taxonomies = is_array($this->field_config["taxonomy"]) ? $this->field_config["taxonomy"] : [$this->field_config["taxonomy"]];
+        $this->setup_wp_object_field( array(
+            "object_type"       => "term",
+            "object_subtype"    => "taxonomy",
+        ));
         $this->add_edit_form_field();
         $this->add_creation_form_field();
     }
 
+    public function get_object_id($term){
+        return $term->term_id ?? null;
+    }
+
+    protected function setup_list_column(){
+        $column = $this->get_column_config();
+        if($column){
+            rb_add_terms_list_column($this->get_meta_key(), $this->subtype_kinds, $column["title"], array($this, "render_field_column_content"), array(
+                "position"  => $column["position"],
+            ));
+        }
+    }
+
     protected function add_edit_form_field(){
-        foreach( $this->taxonomies as $taxonomy_slug ){
+        foreach( $this->subtype_kinds as $taxonomy_slug ){
             add_action( "${taxonomy_slug}_edit_form_fields", array($this, "render_edit_form_row"));
         }
     }
 
     protected function add_creation_form_field(){
-        foreach( $this->taxonomies as $taxonomy_slug ){
+        foreach( $this->subtype_kinds as $taxonomy_slug ){
             add_action( "${taxonomy_slug}_add_form_fields", array($this, "render_add_form_row"));
         }
     }

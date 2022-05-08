@@ -1,6 +1,6 @@
 import { render } from "react-dom";
 import React from "react";
-import RBFinalField from 'COMPONENTS/RBFinalField';
+import WPObjectMetaField from 'COMPONENTS/WPObjectMetaField';
 import parsePHPFieldData from "HELPERS/parsePHPFieldData";
 import $ from 'jquery';
 const apiFetch = wp.apiFetch;
@@ -10,24 +10,44 @@ const apiFetch = wp.apiFetch;
 *   meta value.
 */
 async function render_fields(){
-    const registeredPostMetaFields = await apiFetch( {
-        path: `/rb/postsMetaFields/v1/postType/${RBPlugin.current_post_type}` ,
+    const registeredObjectSubtypeKindMetaFields = await apiFetch( {
+        path: `/rb-fields/v1/${RBObjectsList.objectSubtype}/${RBObjectsList.subtypeKind}`,
     } );
-    console.log("registeredPostMetaFields", RBPlugin.current_post_type, registeredPostMetaFields);
+
+    const parsedFieldsConfig = {};
+
+    if(registeredObjectSubtypeKindMetaFields){
+        Object.keys(registeredObjectSubtypeKindMetaFields).forEach((metakey) => {
+            const metaFieldConfig = registeredObjectSubtypeKindMetaFields[metakey];
+            parsedFieldsConfig[metakey] = parsePHPFieldData(metaFieldConfig.field);
+        } );
+    }
 
     $(document).ready( function(){
-        if(registeredPostMetaFields){
-            Object.keys(registeredPostMetaFields).forEach((metaKey) => {
-                const postMetaFieldConfig = registeredPostMetaFields[metaKey];
-                const fieldData = parsePHPFieldData(postMetaFieldConfig.field);
-                const $rowPlaceholder = $(`#rb-field-placeholder__${metaKey}`);
-                if(!$rowPlaceholder.length)
-                    return;
+        $(".rb-field-col-placeholder").each( function(index){
+            const $placeholder = $(this);
+            console.log("$placeholder", $placeholder);
 
-                let metaValue = JSON.parse($rowPlaceholder.attr("data-value"));
-                render(<RBFinalField {...fieldData } value={metaValue} />, $rowPlaceholder[0]);
-            } );
-        }
+            if(!$placeholder.length)
+                return;
+
+            const metakey = $placeholder.data("metakey");
+            const objectID = $placeholder.data("objectid");
+            const fieldData = parsedFieldsConfig[metakey];
+
+            if(fieldData){
+                render(
+                    <WPObjectMetaField
+                        {...fieldData }
+                        objectSubtype={RBObjectsList.objectSubtype}
+                        subtypeKind={RBObjectsList.subtypeKind}
+                        objectID={objectID}
+                    />,
+                    $placeholder[0]
+                );
+            }
+
+        });
     });
 }
 

@@ -21,6 +21,14 @@ RB_Term_Meta_Fields_Manager::add_field(array(
         "icon"          => "format-gallery",
         "position"      => "document-settings-panel",
     ),
+    "column"        => array(
+        "title"             => "Test",
+        "position"          => 4,
+        "render_callback"   => function($column, $wp_object, $field){
+            $meta_value = $field->get_value($wp_object->term_id);
+            echo esc_attr($meta_value);
+        },
+    ),
     "field"        => array(
         "type"          => "string",
         // "label"         => "Test Single",

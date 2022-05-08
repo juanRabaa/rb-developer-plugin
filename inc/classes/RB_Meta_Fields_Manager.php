@@ -1,5 +1,5 @@
 <?php
-
+require_once( RB_DEVELOPER_PLUGIN_TRAITS . "/Initializer.php" );
 /**
 *   Takes a series of arguments to create a fields manager.
 *   Generates fields and stores them in $meta_fields
@@ -8,6 +8,7 @@
 *   this class is used.
 */
 class RB_Meta_Fields_Manager{
+    use Initializer;
     static protected $fields_managers = array();
     protected $meta_fields = array();
     protected $object_type = ""; //post, term, etc
@@ -17,6 +18,11 @@ class RB_Meta_Fields_Manager{
         "namespace"             => "",
         "object_subtype"        => "",
     );
+
+    static protected function on_init(){
+        // REVIEW: Should the objects_list_scripts enqueue be done here?
+        add_action( 'admin_enqueue_scripts', array(self::class, "objects_list_scripts"));
+    }
 
     /**
     *   Stablishes the values for the required static properties. These are:
@@ -42,6 +48,36 @@ class RB_Meta_Fields_Manager{
         // $this->get_object_subtype = $config["get_object_subtype"] ?? null;
         $this->register_rest_routes();
         self::$fields_managers[$config["object_type"]] = $this;
+        self::init();
+    }
+
+    static public function objects_list_scripts(){
+        $current_screen = get_current_screen();
+        $object_type = "";
+        $object_subtype = "";
+        $subtype_kind = "";
+
+        // REVIEW: Is there a way to make it more dynamic?
+        if($current_screen->base === "edit"){
+            $object_type = "post";
+            $object_subtype = "post_type";
+            $subtype_kind = $current_screen->post_type;
+        }
+        else if($current_screen->base === "edit-tags"){
+            $object_type = "term";
+            $object_subtype = "taxonomy";
+            $subtype_kind = $current_screen->taxonomy;
+        }
+
+        if($object_subtype){
+            // wp_enqueue_media();
+            wp_enqueue_script( 'rb-object-list-column-fields', RB_DEVELOPER_PLUGIN_DIST_SCRIPTS . "/rb-object-list-column-fields/index.min.js", ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-plugins', 'wp-edit-post'], false );
+            wp_localize_script( "rb-object-list-column-fields", "RBObjectsList", array(
+                "objectType"            => $object_type,
+                "objectSubtype"         => $object_subtype,
+                "subtypeKind"           => $subtype_kind,
+            ));
+        }
     }
 
     // TODO: there should be a wrapper around the get_meta function that fetched custom
@@ -79,7 +115,7 @@ class RB_Meta_Fields_Manager{
 
         add_action( 'rest_api_init', function () use ($namespace, $object_subtype){
             if($object_subtype){
-                register_rest_route( "rb/$namespace/v1", "/$object_subtype/(?P<object_subtype_val>.+)", array(
+                register_rest_route( "rb-fields/v1", "/$object_subtype/(?P<object_subtype_val>.+)", array(
                     'methods'   => 'GET',
                     'callback'  => function ( $data ) {
                         return $this->get_registered_meta_fields()[$data["object_subtype_val"]] ?? array();

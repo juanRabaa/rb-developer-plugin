@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import PostMetaField from 'COMPONENTS/PostMetaField';
+import GutenbergPostMetaField from 'COMPONENTS/GutenbergPostMetaField';
 import RBField from 'COMPONENTS/RBField';
 import parsePHPFieldData from "HELPERS/parsePHPFieldData";
 const apiFetch = wp.apiFetch;
@@ -27,7 +27,7 @@ const RBPostMetaFields = () => {
     // Fetch custom fields
     useEffect( () => {
         if(postType){
-            apiFetch( { path: `/rb/postsMetaFields/v1/postType/${wp.data.select('core/editor').getCurrentPostType()}` } )
+            apiFetch( { path: `/rb-fields/v1/post_type/${wp.data.select('core/editor').getCurrentPostType()}` } )
                 .then( (data) => {
                     setRegisteredPostMetaFields(data);
                 });
@@ -62,7 +62,7 @@ const RBPostMetaFields = () => {
                     icon={postMetaFieldConfig.panel.icon}
                     className="custom-panel"
                 >
-                    <PostMetaField
+                    <GutenbergPostMetaField
                         {...fieldData }
                     />
                 </PositionComponent>

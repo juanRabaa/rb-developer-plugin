@@ -1,17 +1,24 @@
 <?php
 
+function pre_print(){
+    echo "<pre>";
+    foreach (func_get_args() as $value) {
+        var_dump($value); echo "<br>";
+    }
+    echo "</pre>";
+}
+
 function rb_update_object_type_meta($args){
     $required_args = array(
         "object_id"                         => "",
         "object_type_rest_manager"          => null,
-        "object_meta_rest_manager"     => null,
+        "object_meta_rest_manager"          => null,
         "values"                            => array(), // meta values to save
     );
     extract(array_merge($required_args, $args));
 
     $schema = $object_type_rest_manager->get_item_schema();
     $meta_schema = $schema["properties"]["meta"]["properties"];
-
     $meta_args = array_filter($values, function($input_name) use ($meta_schema){
         return isset($meta_schema[$input_name]);
     }, ARRAY_FILTER_USE_KEY);

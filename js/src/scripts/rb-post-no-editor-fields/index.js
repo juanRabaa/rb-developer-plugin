@@ -11,7 +11,7 @@ const apiFetch = wp.apiFetch;
 */
 async function render_fields(){
     const registeredPostMetaFields = await apiFetch( {
-        path: `/rb/postsMetaFields/v1/postType/${RBPlugin.current_post_type}` ,
+        path: `/rb-fields/v1/post_type/${RBPlugin.current_post_type}` ,
     } );
     console.log("registeredPostMetaFields", RBPlugin.current_post_type, registeredPostMetaFields);
 

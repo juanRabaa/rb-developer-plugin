@@ -24,7 +24,11 @@ class RB_Post_Meta_Fields_Manager{
     }
 
     static protected function manage_regular_post_update(){
-        add_action( 'save_post', array(self::class, "save_post_metas"), 10, 3 );
+        add_action( 'save_post', array(self::class, "save_metas_on_regular_post_update"), 10, 3 );
+    }
+
+    static public function save_metas_on_regular_post_update($post_ID, $post, $update ){
+        self::save_post_metas($post_ID, $post, $_POST);
     }
 
     /**
@@ -113,7 +117,7 @@ class RB_Post_Meta_Fields_Manager{
             "default_object_subtype"       => "post",
             "rest_vars"                    => array(
                 "namespace"             => "postsMetaFields",
-                "object_subtype"        => "postType",
+                "object_subtype"        => "post_type",
             ),
             "filter_field_config"       => array(self::class, "filter_field_config"),
         );

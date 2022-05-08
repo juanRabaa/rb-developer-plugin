@@ -6,7 +6,7 @@ import RBField from 'COMPONENTS/RBField';
 *   Used inside a gutenberg core/editor context to add a series of controls to modify
 *   one of the post meta values
 */
-export default function PostMetaField(props){
+export default function GutenbergPostMetaField(props){
     const {
         name,
         onChange: passedOnChange,

@@ -35,7 +35,7 @@ add_action( 'init', function() {
 		'label'                 => __( 'Post Type', 'rb_development' ),
 		'description'           => __( 'Post Type Description', 'rb_development' ),
 		'labels'                => $labels,
-		'supports'              => ['title', 'thumbnail', 'excerpt', "custom-fields"],
+		'supports'              => ['title', 'thumbnail', 'excerpt', "editor", "custom-fields"],
 		'taxonomies'            => array( 'category', 'post_tag' ),
 		'hierarchical'          => false,
 		'public'                => true,
@@ -48,6 +48,7 @@ add_action( 'init', function() {
 		'has_archive'           => true,
 		'exclude_from_search'   => false,
 		'publicly_queryable'    => true,
+		'show_in_rest'			=> true,
 		'capability_type'       => 'page',
 	);
 	register_post_type( 'rb_meta_test_postype', $args );

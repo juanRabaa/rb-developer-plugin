@@ -95,10 +95,11 @@ abstract class RB_Objects_List_Column{
         $columns_amount = count($original_columns);
         $position = is_int($this->position) && $this->position >= 0 && $this->position < $columns_amount ? $this->position : $columns_amount;
 
-        if($position == $columns_amount)
+        if($position === $columns_amount)
             $columns[$this->id] = $this->title;
         else
-            array_splice( $columns, $position, 0, array( $this->id => $this->title) );
+            $columns = array_slice( $columns, 0, $position ) + array( $this->id => $this->title) + array_slice( $columns, $position );
+
         return $columns;
     }
 
