@@ -35,7 +35,7 @@ add_action( 'init', function() {
 		'label'                 => __( 'Post Type', 'rb_development' ),
 		'description'           => __( 'Post Type Description', 'rb_development' ),
 		'labels'                => $labels,
-		'supports'              => ['title', 'thumbnail', 'excerpt', "editor", "custom-fields"],
+		'supports'              => ['title', 'thumbnail', 'excerpt', "custom-fields"],
 		'taxonomies'            => array( 'category', 'post_tag' ),
 		'hierarchical'          => false,
 		'public'                => true,
@@ -54,195 +54,133 @@ add_action( 'init', function() {
 	register_post_type( 'rb_meta_test_postype', $args );
 }, 0 );
 
-$test_fields_data = array(
-    // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
-    "repeater"      => array(
-        "dynamic_title"         => "title", // Name of the field to get value from
-        "collapse"              => true,
-        "collapse_open"         => false,
-        "accordion"             => false,
-        "sortable"              => true,
-        "max"                   => 10,
-        "layout"                => "tabs",
-        "labels"                => array(
-            "empty"         => "No hay galerias cargadas. Empeza ya!",
-            "item_title"    => "Gallery (%n)", // Default title of the field ( %n is replaced with the position of the current item)
-            "max_reached"   => "Paga el premium para agregar mas galerias! (re rata el dev)",
-        ),
-    ),
-    "description"   => "Muchas galerias. Por las dudas.",
-    // "label"         => "Test Repeater",
-    "fields"    => array(
-        array(
-            "name"          => "title",
-            "label"         => "Titulo",
-            "type"          => "string",
-            "component"     => "text",
-            "default_value" => "DEFAULT",
-        ),
-        array(
-            "name"          => "description",
-            "label"         => "Descripcion",
-            "type"          => "string",
-            "component"     => "TextareaControl",
-        ),
-        array(
-            "name"          => "attachment",
-            "label"         => "Galeria",
-            "type"          => "array",
+add_action( "rb-fields-object-post-ready", function() use ($test_fields_data){
+	/**********************************************************
+	*   POST META FIELDS TEST
+	***********************************************************/
+	RB_Post_Meta_Fields_Manager::add_field(array(
+	    // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
+	    "meta_key"      => "single_meta_field",
+	    "post_type"     => "post",
+	    "single"        => true,
+	    "panel"         => array(
+	        "title"         => "Single Value Field",
+	        "icon"          => "format-gallery",
+	        "position"      => "document-settings-panel",
+	    ),
+	    "field"        => array(
+	        "type"          => "string",
+	        "label"         => "Test Single",
+	        "description"   => "Test Single",
+	        "component"     => "text",
+	    ),
+	));
+
+	RB_Post_Meta_Fields_Manager::add_field(array(
+	    // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
+	    "meta_key"      => "single_meta_field",
+	    "post_type"     => "page",
+	    "single"        => true,
+	    "panel"         => array(
+	        "title"         => "Single Value Field",
+	        "icon"          => "format-gallery",
+	        "position"      => "document-settings-panel",
+	    ),
+	    "field"        => array(
+	        "type"          => "string",
+	        "label"         => "Test Single",
+	        "description"   => "Test Single",
+	        "component"     => "te78xt",
+	    ),
+	));
+
+	RB_Post_Meta_Fields_Manager::add_field(array(
+	    // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
+	    "meta_key"      => "single_gallery",
+	    "post_type"     => "rb_meta_test_postype",
+		"register"		=> true,
+	    "single"        => true,
+	    "panel"         => array(
+	        "title"         => "Main Gallery",
+	        "icon"          => "format-gallery",
+	        "position"      => "document-settings-panel",
+	    ),
+		"column"		=> array(
+			"title"			=> "Main Gallery",
+			// "content"		=> "Columna",
+		),
+	    "field"        => array(
+			"type"          => "array",
             "items" => array(
                 "type"  => "integer",
             ),
-            "component"     => "attachments",
-            "component_props"    => array(
-                "gallery"   => true,
-            ),
-        ),
-        array(
-            "name"              => "background",
-            "label"             => "Color de fondo",
-            "type"              => "string",
-            "component"         => "ColorPalette",
-            "default_value"     => "#fff",
-            "component_props"    => array(
-                "colors"    => array(
-                    array( "name"  => "red", "color"    => "#f00" ),
-                    array( "name"  => "white", "color"  => "#fff" ),
-                    array( "name"  => "blue", "color"   => "#00f" ),
-                ),
-            ),
-        ),
-        array(
-            "name"              => "slider_type",
-            "label"             => "Slider type",
-            "component"         => "RadioControl",
-            "defaultValue"      => "second",
-            "component_props"    => array(
-                "min"   => 10,
-                "max"   => 20,
-                // "label" => "Slider type",
-                "help"  => "Choose!",
-                "options"   => array(
-                    array(
-                        "label"     => "First Option",
-                        "value"    => "first",
-                    ),
-                    array(
-                        "label"     => "Second Option",
-                        "value"    => "second",
-                    ),
-                ),
-            ),
-            "propsMapping"      => array(
-                "value" => "selected",
-            ),
-        ),
-    ),
-);
+	        // "label"         => "Test Single",
+	        // "description"   => "Test Single",
+	        "component"     => "attachments",
+			"component_props"    => array(
+				"gallery"   => true,
+			),
+	    ),
+	));
 
-/**********************************************************
-*   POST META FIELDS TEST
-***********************************************************/
-RB_Post_Meta_Fields_Manager::add_field(array(
-    // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
-    "meta_key"      => "single_meta_field",
-    "post_type"     => "post",
-    "single"        => true,
-    "panel"         => array(
-        "title"         => "Single Value Field",
-        "icon"          => "format-gallery",
-        "position"      => "document-settings-panel",
-    ),
-    "field"        => array(
-        "type"          => "string",
-        "label"         => "Test Single",
-        "description"   => "Test Single",
-        "component"     => "text",
-    ),
-));
+	RB_Post_Meta_Fields_Manager::add_field(array(
+	    "meta_key"      => "meta_test",
+	    "post_type"     => ["post", "rb_meta_test_postype"],
+	    "single"        => true,
+	    "type"          => "object",
+		// "column"		=> array(
+		// 	"title"			=> "Columna",
+		// 	// "content"		=> "Columna",
+		// ),
+	    "panel"         => array(
+	        "title"         => "Galerias",
+	        "icon"          => "format-gallery",
+	        "position"      => "document-settings-panel",
+	    ),
+	    "field"        => $test_fields_data,
+	));
 
-RB_Post_Meta_Fields_Manager::add_field(array(
-    // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
-    "meta_key"      => "single_meta_field",
-    "post_type"     => "page",
-    "single"        => true,
-    "panel"         => array(
-        "title"         => "Single Value Field",
-        "icon"          => "format-gallery",
-        "position"      => "document-settings-panel",
-    ),
-    "field"        => array(
-        "type"          => "string",
-        "label"         => "Test Single",
-        "description"   => "Test Single",
-        "component"     => "te78xt",
-    ),
-));
+	RB_Post_Meta_Fields_Manager::add_field(array(
+	    "meta_key"      => "sidebar_test_meta",
+	    "post_type"     => "post",
+	    "single"        => true,
+	    "type"          => "object",
+	    "panel"         => array(
+	        "title"         => "Galerias",
+	        "icon"          => "format-gallery",
+	        "position"      => "sidebar",
+	    ),
+	    "field"        => $test_fields_data,
+	));
 
-RB_Post_Meta_Fields_Manager::add_field(array(
-    "meta_key"      => "meta_test",
-    "post_type"     => ["post", "rb_meta_test_postype"],
-    "single"        => true,
-    "type"          => "object",
-	"column"		=> array(
-		"title"			=> "Columna",
-		// "content"		=> "Columna",
-	),
-    "panel"         => array(
-        "title"         => "Galerias",
-        "icon"          => "format-gallery",
-        "position"      => "document-settings-panel",
-    ),
-    "field"        => $test_fields_data,
-));
+	RB_Post_Meta_Fields_Manager::add_field(array(
+	    "meta_key"      => "sidebar_test_meta",
+	    "post_type"     => "attachment",
+	    "single"        => true,
+	    "type"          => "object",
+	    "panel"         => array(
+	        "title"         => "Galerias",
+	        "icon"          => "format-gallery",
+	        "position"      => "sidebar",
+	    ),
+	    "field"        => $test_fields_data,
+	));
 
-RB_Post_Meta_Fields_Manager::add_field(array(
-    "meta_key"      => "sidebar_test_meta",
-    "post_type"     => "post",
-    "single"        => true,
-    "type"          => "object",
-    "panel"         => array(
-        "title"         => "Galerias",
-        "icon"          => "format-gallery",
-        "position"      => "sidebar",
-    ),
-    "field"        => $test_fields_data,
-));
-
-RB_Post_Meta_Fields_Manager::add_field(array(
-    "meta_key"      => "sidebar_test_meta",
-    "post_type"     => "attachment",
-    "single"        => true,
-    "type"          => "object",
-    "panel"         => array(
-        "title"         => "Galerias",
-        "icon"          => "format-gallery",
-        "position"      => "sidebar",
-    ),
-    "field"        => $test_fields_data,
-));
-
-RB_Post_Meta_Fields_Manager::add_field(array(
-    // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
-    "meta_key"      => "single_meta_field",
-    "post_type"     => "attachment",
-    "single"        => true,
-    "panel"         => array(
-        "title"         => "Single Value Field",
-        "icon"          => "format-gallery",
-        "position"      => "document-settings-panel",
-    ),
-    "field"        => array(
-        "type"          => "string",
-        "label"         => "Test Single",
-        "description"   => "Test Single",
-        "component"     => "text",
-    ),
-));
-
-
-
-
-add_action('init', function(){
-    // var_dump( get_post_meta( $post->ID, "meta_test" ) );
+	RB_Post_Meta_Fields_Manager::add_field(array(
+	    // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
+	    "meta_key"      => "single_meta_field",
+	    "post_type"     => "attachment",
+	    "single"        => true,
+	    "panel"         => array(
+	        "title"         => "Single Value Field",
+	        "icon"          => "format-gallery",
+	        "position"      => "document-settings-panel",
+	    ),
+	    "field"        => array(
+	        "type"          => "string",
+	        "label"         => "Test Single",
+	        "description"   => "Test Single",
+	        "component"     => "text",
+	    ),
+	));
 });

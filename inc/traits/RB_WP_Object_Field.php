@@ -1,7 +1,4 @@
 <?php
-
-require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Meta_Fields_Manager.php" );
-
 trait RB_WP_Object_Field {
     protected $object_type = "";
     protected $object_subtype = "";
@@ -13,7 +10,6 @@ trait RB_WP_Object_Field {
         $this->object_type = $args["object_type"];
         $this->object_subtype = $args["object_subtype"];
         $this->subtype_kinds = is_array($this->field_config[$this->object_subtype]) ? $this->field_config[$this->object_subtype] : [$this->field_config[$this->object_subtype]];
-
         $this->setup_list_column();
     }
 

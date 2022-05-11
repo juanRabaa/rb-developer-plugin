@@ -27,7 +27,7 @@ const RBPostMetaFields = () => {
     // Fetch custom fields
     useEffect( () => {
         if(postType){
-            apiFetch( { path: `/rb-fields/v1/post_type/${wp.data.select('core/editor').getCurrentPostType()}` } )
+            apiFetch( { path: `/rb-fields/v1/wp-object/post_type/${wp.data.select('core/editor').getCurrentPostType()}` } )
                 .then( (data) => {
                     setRegisteredPostMetaFields(data);
                 });

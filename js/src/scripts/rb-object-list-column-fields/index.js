@@ -11,7 +11,7 @@ const apiFetch = wp.apiFetch;
 */
 async function render_fields(){
     const registeredObjectSubtypeKindMetaFields = await apiFetch( {
-        path: `/rb-fields/v1/${RBObjectsList.objectSubtype}/${RBObjectsList.subtypeKind}`,
+        path: `/rb-fields/v1/wp-object/${RBObjectsList.objectSubtype}/${RBObjectsList.subtypeKind}`,
     } );
 
     const parsedFieldsConfig = {};
@@ -26,7 +26,6 @@ async function render_fields(){
     $(document).ready( function(){
         $(".rb-field-col-placeholder").each( function(index){
             const $placeholder = $(this);
-            console.log("$placeholder", $placeholder);
 
             if(!$placeholder.length)
                 return;

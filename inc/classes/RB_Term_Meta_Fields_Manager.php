@@ -1,38 +1,46 @@
 <?php
 require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Term_Meta_Field.php" );
-require_once( RB_DEVELOPER_PLUGIN_TRAITS . "/RB_Meta_Field.php" );
-require_once( RB_DEVELOPER_PLUGIN_TRAITS . "/Initializer.php" );
+require_once( RB_DEVELOPER_PLUGIN_TRAITS . "/RB_Object_Type_Fields_Manager.php" );
 
-// TODO: This should also be able to show controls or information in the terms list table
-// TODO: Check why MediaUploadCheck doesnt allow the RBAttachmentControl to work in term form, as if the user had no media permissions
 /**
 *   Enqueues the needed scripts and proccess the meta values on term save
 */
 class RB_Term_Meta_Fields_Manager{
-    use Initializer;
-    use RB_Meta_Field {
-        add_field as base_add_field;
+    use RB_Object_Type_Fields_Manager {
+        on_init as base_on_init;
+        add_field_to_kind as base_add_field_to_kind;
     }
 
     static protected function on_init(){
-        self::generate_fields_manager();
-
+        self::base_on_init();
         add_action( 'admin_enqueue_scripts', array(self::class, "enqueue_admin_scripts") );
         add_filter( 'wp_update_term_data', array(self::class, "update_meta_on_term_update"), 10, 4 );
         add_action( 'created_term', array(self::class, "set_new_term_meta"), 10, 3 );
     }
 
-    static protected function get_field_manager_config(){
-        return array(
-            "object_type"                  => "term",
-            "object_subtype"               => "taxonomy",
-            "default_object_subtype"       => "category",
-            "rest_vars"                    => array(
-                "namespace"             => "termsMetaFields",
-                "object_subtype"        => "taxonomy",
-            ),
-            // "filter_field_config"       => array(self::class, "filter_field_config"),
-        );
+    static public function get_object_type(){
+        return "term";
+    }
+
+    static public function get_object_subtype(){
+        return "taxonomy";
+    }
+
+    static public function get_default_object_subtype(){
+        return "taxonomy";
+    }
+
+    static public function get_kinds(){
+        return get_taxonomies();
+    }
+
+    static public function add_field_to_kind($field_args, $kind){
+        $field_data = self::base_add_field_to_kind($field_args, $kind);
+        extract($field_data); //$field_config, $field_schema
+        if($field_config)
+            new RB_Term_Meta_Field($field_config);
+
+        return $field_config;
     }
 
     static public function enqueue_admin_scripts($hook){
@@ -66,8 +74,4 @@ class RB_Term_Meta_Fields_Manager{
         rb_update_term_meta($term_id, $taxonomy, $values);
     }
 
-    static public function add_field($args){
-        $field_config = self::base_add_field($args);
-        $field = new RB_Term_Meta_Field($field_config);
-    }
 }

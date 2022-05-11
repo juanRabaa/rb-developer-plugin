@@ -12,7 +12,7 @@ const apiFetch = wp.apiFetch;
 async function render_fields(){
     const taxonomy = wp.url.getQueryArg(window.location.href, "taxonomy");
     const registeredTermMetaFields = await apiFetch( {
-        path: `/rb-fields/v1/taxonomy/${taxonomy}` ,
+        path: `/rb-fields/v1/wp-object/taxonomy/${taxonomy}` ,
     } );
     console.log("registeredTermMetaFields", taxonomy, registeredTermMetaFields);
 

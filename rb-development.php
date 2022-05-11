@@ -63,5 +63,37 @@ require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Terms_List_Column.php" );
 
 RB_Post_Meta_Fields_Manager::init();
 RB_Term_Meta_Fields_Manager::init();
+require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/test-variables.php" );
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/post-meta-fields.php" );
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/term-meta-fields.php" );
+
+
+
+add_action( 'admin_enqueue_scripts', function(){
+    $current_screen = get_current_screen();
+    $object_type = "";
+    $object_subtype = "";
+    $subtype_kind = "";
+
+    // REVIEW: Is there a way to make it more dynamic?
+    if($current_screen->base === "edit"){
+        $object_type = "post";
+        $object_subtype = "post_type";
+        $subtype_kind = $current_screen->post_type;
+    }
+    else if($current_screen->base === "edit-tags"){
+        $object_type = "term";
+        $object_subtype = "taxonomy";
+        $subtype_kind = $current_screen->taxonomy;
+    }
+
+    if($object_subtype){
+        // wp_enqueue_media();
+        wp_enqueue_script( 'rb-object-list-column-fields', RB_DEVELOPER_PLUGIN_DIST_SCRIPTS . "/rb-object-list-column-fields/index.min.js", ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-plugins', 'wp-edit-post'], false );
+        wp_localize_script( "rb-object-list-column-fields", "RBObjectsList", array(
+            "objectType"            => $object_type,
+            "objectSubtype"         => $object_subtype,
+            "subtypeKind"           => $subtype_kind,
+        ));
+    }
+});
