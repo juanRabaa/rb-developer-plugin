@@ -60,13 +60,18 @@ require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Objects_List_Column.php" );
 require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Posts_List_Column.php" );
 require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Terms_List_Column.php" );
 
+// Customizer
+require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/customizer/index.php" );
 
+// INIT
 RB_Post_Meta_Fields_Manager::init();
 RB_Term_Meta_Fields_Manager::init();
+
+// TESTS
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/test-variables.php" );
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/post-meta-fields.php" );
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/term-meta-fields.php" );
-
+require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/customizer.php" );
 
 
 add_action( 'admin_enqueue_scripts', function(){
