@@ -4,7 +4,7 @@ import RBField from 'COMPONENTS/RBField';
 /**
 *   Automanaged RBField.
 */
-export default function RBFinalField({ value: initialValue, onRender, ...fieldProps}){
+export default function RBFinalField({ value: initialValue, onRender, onChange: passedOnChange, ...fieldProps}){
     const [value, setValue] = useState(initialValue);
 
     // REVIEW: This is not right... should check another way to update the value
@@ -17,7 +17,13 @@ export default function RBFinalField({ value: initialValue, onRender, ...fieldPr
         }
     }, [onRender]);
 
+    const onChange = ({value}) => {
+        setValue(value);
+        if(passedOnChange)
+            passedOnChange({value});
+    }
+
     return (
-        <RBField {...fieldProps} value = {value} onChange = { ({value}) => setValue(value) }/>
+        <RBField {...fieldProps} value = {value} onChange = { (data) => onChange(data) }/>
     );
 }

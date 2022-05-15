@@ -12,7 +12,7 @@ class RB_Fields_Manager {
     *       @property string object_subtype                                     "rb/$namespace/v1/$kind/(?P<object_subtype_val>.+)"
     *   }
     */
-    public function __construct($config){
+    public function __construct($config = array()){
         $this->filter_field_config = $config["filter_field_config"] ?? null;
     }
 

@@ -54,6 +54,9 @@ require_once( RB_DEVELOPER_PLUGIN_INC . "/functions.php" );
 require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Custom_Fields.php" );
 require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Post_Meta_Fields_Manager.php" );
 require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Term_Meta_Fields_Manager.php" );
+add_action( "customize_register", function( $wp_customize ) {
+	require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Field_Customizer_Control.php" );
+});
 
 // Columns
 require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Objects_List_Column.php" );
