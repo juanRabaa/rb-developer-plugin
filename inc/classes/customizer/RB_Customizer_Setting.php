@@ -33,4 +33,8 @@ class RB_Customizer_Setting{
             $this->wp_customize_manager->selective_refresh->add_partial($setting->id . md5($selector), $args);
         }
     }
+
+	public function has_selective_refresh(){
+		return $this->selective_refresh['activated'] && !$this->selective_refresh['prevent'];
+	}
 }

@@ -28,7 +28,7 @@ trait RB_Object_Type_Fields_Manager{
 
     abstract static public function get_object_subtype(); // post_type, taxonomy...
 
-    abstract static public function get_default_object_subtype();
+    abstract static public function get_default_object_subtype(); // post, post_tag, category...
 
     abstract static public function get_kinds(); // get_post_types
 

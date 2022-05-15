@@ -89,7 +89,7 @@ class RB_Fields_Manager {
     *                                                                           to have a matching schema for the value this field will store when you
     *                                                                           manually register the meta.
     */
-    public function generate_field($args){
+    public function add_field($args){
         $field_data = $this->generate_field_data($args);
         $this->register_field($field_data["field_config"]);
         return $field_data;

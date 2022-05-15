@@ -17,7 +17,8 @@ class RB_Customizer_Section{
 		$this->options = $options;
         $this->wp_customize_manager->add_section($id,$options);
 		$this->selective_refresh = sanitize_selective_refresh_args($selective_refresh, $this->selective_refresh);
-        $this->add_selective_refresh_partials();
+		// We want this to run after all controls and settings have been defined.
+		add_action("customize_register", array($this, "add_selective_refresh_partials"), 999999999999);
 		array_push(self::$sections, $this);
 	}
 
@@ -36,19 +37,19 @@ class RB_Customizer_Section{
         }
     }
 
-	public function add_control($id, $control_class, $settings, $options){
+	public function add_control($id, $control_class, $setting, $options){
 		$options['section'] = $this->id;
-		$this->controls[] = new RB_Customizer_Control($id, $this->wp_customize_manager, $control_class, $options, $settings);
+		$this->controls[] = new RB_Customizer_Control($id, $this->wp_customize_manager, $control_class, $setting, $options);
 		return $this;
 	}
 
 	//For every control it has, returns the settings that doesnt have selective refresh activated
 	public function settings_without_selective_refresh(){
-        return array_map( fn($control) => $control->settings_without_selective_refresh(true), $this->controls);
-	}
-
-	//For every control it has, returns the settings that have selective refresh activated
-	public function settings_with_selective_refresh(){
-        return array_map( fn($control) => $control->settings_with_selective_refresh(true), $this->controls);
+		$settings = [];
+		foreach ($this->controls as $control) {
+			if(!$control->setting?->has_selective_refresh())
+				$settings[] = $control->setting->id;
+		}
+        return $settings;
 	}
 }

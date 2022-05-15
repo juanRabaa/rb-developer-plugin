@@ -23,7 +23,7 @@ function sanitize_selective_refresh_args($args, $defaults = array()){
 
     $selective_refresh = array_merge($selective_refresh, $args);
     if(!isset($selective_refresh['selector']) || !is_array($selective_refresh['selector']) || !is_string($selective_refresh['selector']))
-        return false;
+        return $selective_refresh;
 
     function sanitize_single($selector, $selector_selective_refresh){
         if(!is_array($selective_refresh))
