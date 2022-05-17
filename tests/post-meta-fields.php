@@ -158,6 +158,10 @@ add_action( "rb-fields-object-post-ready", function() use ($test_fields_data){
 	    "post_type"     => "attachment",
 	    "single"        => true,
 	    "type"          => "object",
+		"column"		=> array(
+			"title"			=> "Main Gallery",
+			// "content"		=> "Columna",
+		),
 	    "panel"         => array(
 	        "title"         => "Galerias",
 	        "icon"          => "format-gallery",

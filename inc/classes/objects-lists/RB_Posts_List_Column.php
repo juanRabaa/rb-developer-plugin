@@ -7,7 +7,15 @@ class RB_Posts_List_Column extends RB_Objects_List_Column{
     }
 
     static protected function manage_column_base_filter_tag($admin_page){
+        if($admin_page === "attachment")
+            return "manage_media_columns";
         return "manage_{$admin_page}_posts_columns";
+    }
+
+    static protected function manage_column_content_filter_tag($admin_page){
+        if($admin_page === "attachment")
+            return "manage_media_custom_column";
+        return "manage_{$admin_page}_posts_custom_column";
     }
 
     /**
@@ -15,7 +23,7 @@ class RB_Posts_List_Column extends RB_Objects_List_Column{
     */
     protected function setup_screen_column($admin_page){
         RB_Filters_Manager::add_filter( "rb_metabox-{$this->id}__{$admin_page}-column_base", self::manage_column_base_filter_tag($admin_page), array($this, 'add_column_base') );
-        RB_Filters_Manager::add_filter( "rb_metabox-{$this->id}__{$admin_page}-column_content", "manage_{$admin_page}_posts_custom_column", array($this, 'add_column_content'), array(
+        RB_Filters_Manager::add_filter( "rb_metabox-{$this->id}__{$admin_page}-column_content", self::manage_column_content_filter_tag($admin_page), array($this, 'add_column_content'), array(
             'accepted_args'  => 2,
         ));
     }

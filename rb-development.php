@@ -73,7 +73,7 @@ add_action( 'admin_enqueue_scripts', function(){
     $subtype_kind = "";
 
     // REVIEW: Is there a way to make it more dynamic?
-    if($current_screen->base === "edit"){
+    if($current_screen->base === "edit" || $current_screen->base === "upload"){
         $object_type = "post";
         $object_subtype = "post_type";
         $subtype_kind = $current_screen->post_type;
