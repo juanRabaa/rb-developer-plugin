@@ -1,6 +1,5 @@
 <?php
 require_once( RB_DEVELOPER_PLUGIN_TRAITS . "/Initializer.php" );
-require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Fields_Manager.php" );
 
 /**
 *   Functionalities that are used by managers of wordpress object fields.
@@ -126,7 +125,7 @@ trait RB_Object_Type_Fields_Manager{
     *   The rest are explained bellow.
     *   @param string meta_key                                                  Meta key which value will be controlled by this field. It is required.
     *   @param mixed[] field                                                    Configuration of the field that manages the mata value.
-    *                                                                           See RB_Custom_Fields::generate_field_schema
+    *                                                                           See RB_Fields_Manager::generate_field_schema
     *   @param mixed[] panel                                                    Sets data related to the slotfill component of the metabox in the editor.
     *   {
     *       @param string position                                              Slug that indicates the metabox position.

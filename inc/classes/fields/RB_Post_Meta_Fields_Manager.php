@@ -1,6 +1,4 @@
 <?php
-require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/RB_Post_Meta_Field.php" );
-require_once( RB_DEVELOPER_PLUGIN_TRAITS . "/RB_Object_Type_Fields_Manager.php" );
 
 /**
 *   Enqueues the needed scripts and proccess the meta values on post save

@@ -1,5 +1,4 @@
 <?php
-require_once( RB_DEVELOPER_PLUGIN_TRAITS . "/RB_WP_Object_Field.php" );
 
 /**
 *   Renders the field placeholder in every place a term needs it to be
