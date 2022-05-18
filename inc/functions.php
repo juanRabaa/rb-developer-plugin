@@ -22,13 +22,22 @@ function rb_update_object_type_meta($args){
     $meta_args = array_filter($values, function($input_name) use ($meta_schema){
         return isset($meta_schema[$input_name]);
     }, ARRAY_FILTER_USE_KEY);
-    $meta_args = array_map(function($meta_value){
-        return json_decode(wp_unslash($meta_value), true);
-    }, $meta_args);
+
+    foreach ($meta_args as $meta_key => $meta_value) {
+        $meta_type = $meta_schema[$meta_key]["type"];
+        // in some places (like menu items) the same meta name exists for multiple objects,
+        // so the meta value it gets stored in an array in which the keys are the object ids.
+        if(is_array($meta_value) && isset($meta_value[$object_id]))
+            $meta_value = $meta_value[$object_id];
+
+        //if($meta_type === "array" || $meta_type === "object") // TODO: Este check no es necesario, siempre se guarda como encoded json
+        $meta_value = json_decode(wp_unslash($meta_value), true);
+
+        $meta_args[$meta_key] = $meta_value;
+    }
 
     if ( ! empty( $schema['properties']['meta'] ) && isset( $meta_args ) ) {
         $meta_update = $object_meta_rest_manager->update_value( $meta_args, $object_id );
-
         if ( is_wp_error( $meta_update ) ) {
             // return $meta_update;
         }
@@ -45,9 +54,15 @@ function rb_update_term_meta($term_id, $taxonomy, $values){
 }
 
 function rb_update_post_meta($post_id, $post_type, $values){
+    $object_type_rest_manager = null;
+    if( $post_type === "nav_menu_item" )
+        $object_type_rest_manager = new WP_REST_Menu_Items_Controller($post_type);
+    else
+        $object_type_rest_manager = new WP_REST_Posts_Controller($post_type);
+
     rb_update_object_type_meta(array(
         "object_id"                         => $post_id,
-        "object_type_rest_manager"          => new WP_REST_Posts_Controller($post_type),
+        "object_type_rest_manager"          => $object_type_rest_manager,
         "object_meta_rest_manager"          => new WP_REST_Post_Meta_Fields($post_type),
         "values"                            => $values, // meta values to save
     ));

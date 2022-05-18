@@ -62,6 +62,8 @@ RB_Term_Meta_Fields_Manager::init();
 // TESTS
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/test-variables.php" );
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/post-meta-fields.php" );
+require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/attachment-fields.php" );
+require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/menu-item-fields.php" );
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/term-meta-fields.php" );
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/customizer.php" );
 

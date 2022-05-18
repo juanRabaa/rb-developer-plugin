@@ -103,13 +103,17 @@ trait RB_Object_Type_Fields_Manager{
         return false;
     }
 
-    static public function add_field($field_args){
+    static public function get_field_subtypes($field_args){
         $field_subtype_kinds = $field_args[self::get_object_subtype()] ?? [];
 
         // TODO: use default object subtype kind
         if(!$field_subtype_kinds)
             return;
-        $field_subtype_kinds = is_array($field_subtype_kinds) ? $field_subtype_kinds : [$field_subtype_kinds];
+        return is_array($field_subtype_kinds) ? $field_subtype_kinds : [$field_subtype_kinds];
+    }
+
+    static public function add_field($field_args){
+        $field_subtype_kinds = self::get_field_subtypes($field_args);
         $field_data = self::$fields_generator->generate_field_data($field_args);
 
         foreach ($field_subtype_kinds as $kind) {

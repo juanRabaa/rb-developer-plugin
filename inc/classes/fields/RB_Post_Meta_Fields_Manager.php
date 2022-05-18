@@ -11,6 +11,8 @@ class RB_Post_Meta_Fields_Manager {
         filter_field_config as base_filter_field_config;
     }
 
+    static protected $nav_menu_fields = [];
+
     static protected function on_init(){
         self::base_on_init();
 
@@ -18,6 +20,7 @@ class RB_Post_Meta_Fields_Manager {
         add_action( 'admin_enqueue_scripts', array(self::class, "enqueue_scripts") );
         self::manage_regular_post_update();
         self::manage_attachment();
+        self::manage_menu_item();
     }
 
     static public function get_object_type(){
@@ -56,24 +59,37 @@ class RB_Post_Meta_Fields_Manager {
 
     static public function add_field($field_args){
         $field_data = self::base_add_field($field_args);
+        $field_subtype_kinds = self::get_field_subtypes($field_args);
         extract($field_data); //$field_config, $field_schema
         if($field_config)
             new RB_Post_Meta_Field($field_config);
-
+        if( in_array("nav_menu_item", $field_subtype_kinds) )
+            self::$nav_menu_fields[] = new RB_Menu_Item_Field($field_config, $field_args);
         return $field_config;
     }
 
-    // only post
     static protected function manage_regular_post_update(){
         add_action( 'save_post', array(self::class, "save_metas_on_regular_post_update"), 10, 3 );
     }
 
-    // only post
     static public function save_metas_on_regular_post_update($post_ID, $post, $update ){
         self::save_post_metas($post_ID, $post, $_POST);
     }
 
-    // only post
+    static protected function manage_menu_item(){
+        add_action( 'admin_enqueue_scripts', array(self::class, "menu_item_scripts") );
+    }
+
+    static public function menu_item_scripts($hook){
+        if ( $hook !== "nav-menus.php" )
+                return;
+        wp_enqueue_media();
+        wp_enqueue_script( "rb-menu-item-fields", RB_DEVELOPER_PLUGIN_DIST_SCRIPTS . "/rb-menu-item-fields/index.min.js", ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-plugins', 'wp-edit-post', "customize-controls"], false );
+		wp_localize_script( "rb-menu-item-fields", "RBMenuItemFields", array(
+			"fields"	=> self::get_kind_fields_manager("nav_menu_item")?->get_registered_fields(),
+		));
+    }
+
     /**
     *   attachment may look like a post_type, but it doesnt use the `save_post`
     *   action. Instead we need to hook the meta update logic in the `attachment_updated`
@@ -87,12 +103,10 @@ class RB_Post_Meta_Fields_Manager {
         add_action( "wp_enqueue_media", array(self::class, "enqueue_media_popup_scripts"), null, 0 );
     }
 
-    // only post
     static public function enqueue_media_popup_scripts(){
         wp_enqueue_script( "rb-media-popup-fields", RB_DEVELOPER_PLUGIN_DIST_SCRIPTS . "/rb-media-popup-fields/index.min.js", ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-plugins', 'wp-edit-post'], false );
     }
 
-    // only post
     static public function add_attachment_fields_data($response, $attachment, $meta){
         $placeholder = "";
         $attachment_fields = self::get_kind_fields_manager("attachment")?->get_registered_fields() ?? [];
@@ -119,17 +133,14 @@ class RB_Post_Meta_Fields_Manager {
         return $response;
     }
 
-    // only post
     static public function save_metas_on_attachment_update($post_ID, $post_before, $post_after){
         self::save_post_metas($post_ID, $post_after, $_POST);
     }
 
-    // only post
     static public function save_metas_on_attachment_creation($post_ID){
         self::save_post_metas($post_ID, null, $_POST);
     }
 
-    // only post
     static public function save_post_metas($post_ID, $post = null, $values = null){
         // The only hook available after the post is succesfully inserted in the
         // db in the `wp_insert_post` function doesn't receive the $data used
@@ -141,7 +152,6 @@ class RB_Post_Meta_Fields_Manager {
         rb_update_post_meta($post_ID, $post->post_type, $values);
     }
 
-    // only post
     static public function enqueue_scripts($hook){
         if ( $hook !== "post.php" && $hook !== "post-new.php" )
                 return;

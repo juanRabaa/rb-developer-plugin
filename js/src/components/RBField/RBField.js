@@ -108,6 +108,7 @@ export default function RBField(props){
     repeaterProps = { ...repeaterProps, ...commonProps };
     // END Repeater props
 
+    /*typeof value === "string" ? value : JSON.stringify(value)*/
     return (
         <div className="meta-field">
             { fieldType === "repeater" &&

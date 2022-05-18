@@ -1,4 +1,16 @@
 <?php
+$simple_gallery_field = array(
+    "type"          => "array",
+    "items" => array(
+        "type"  => "integer",
+    ),
+    // "label"         => "Test Single",
+    // "description"   => "Test Single",
+    "component"     => "attachments",
+    "component_props"    => array(
+        "gallery"   => true,
+    ),
+);
 
 $test_fields_data = array(
     // https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/
