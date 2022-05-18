@@ -78,16 +78,23 @@ class RB_Post_Meta_Fields_Manager {
 
     static protected function manage_menu_item(){
         add_action( 'admin_enqueue_scripts', array(self::class, "menu_item_scripts") );
+        add_action( 'wp_nav_menu_item_custom_fields_customize_template', array(self::class, "customizer_menu_item_fields"), 10, 4 );
     }
 
     static public function menu_item_scripts($hook){
-        if ( $hook !== "nav-menus.php" )
-                return;
+        // if ( $hook !== "nav-menus.php" )
+        //         return;
         wp_enqueue_media();
         wp_enqueue_script( "rb-menu-item-fields", RB_DEVELOPER_PLUGIN_DIST_SCRIPTS . "/rb-menu-item-fields/index.min.js", ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-plugins', 'wp-edit-post', "customize-controls"], false );
 		wp_localize_script( "rb-menu-item-fields", "RBMenuItemFields", array(
 			"fields"	=> self::get_kind_fields_manager("nav_menu_item")?->get_registered_fields(),
 		));
+    }
+
+    static public function customizer_menu_item_fields(){
+        foreach (self::$nav_menu_fields as $menu_item_field) {
+            $menu_item_field->render_field_template();
+        }
     }
 
     /**

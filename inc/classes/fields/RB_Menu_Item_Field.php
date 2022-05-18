@@ -46,6 +46,16 @@ class RB_Menu_Item_Field{
         <?php
     }
 
+    public function render_field_template(){
+        ?>
+        <div class="widefat rb-metabox-placeholder">
+            <div data-field="rb-menu-item-field__<?php echo esc_attr($this->get_meta_key()); ?>" data-itemid={{ data.menu_item_id }} data-value="">
+                <p><span class="spinner is-active"></span>Loading</p>
+            </div>
+        </div>
+        <?php
+    }
+
     /**
     *   Returns if the current menu item is of any of the types wanted.
     *   @param string $item_object                                              An object type from a menu item
