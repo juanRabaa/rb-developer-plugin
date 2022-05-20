@@ -58,10 +58,12 @@ require_once( RB_DEVELOPER_PLUGIN_CLASSES . "/customizer/index.php" );
 // INIT
 RB_Post_Meta_Fields_Manager::init();
 RB_Term_Meta_Fields_Manager::init();
+RB_User_Meta_Fields_Manager::init();
 
 // TESTS
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/test-variables.php" );
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/post-meta-fields.php" );
+require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/user-meta-fields.php" );
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/attachment-fields.php" );
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/menu-item-fields.php" );
 require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/term-meta-fields.php" );

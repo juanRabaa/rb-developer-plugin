@@ -3,10 +3,10 @@
 // Register Custom Post Type
 add_action( 'init', function() {
 	$labels = array(
-		'name'                  => _x( 'Post Types', 'Post Type General Name', 'rb_development' ),
-		'singular_name'         => _x( 'Post Type', 'Post Type Singular Name', 'rb_development' ),
-		'menu_name'             => __( 'Post Types', 'rb_development' ),
-		'name_admin_bar'        => __( 'Post Type', 'rb_development' ),
+		'name'                  => _x( 'Customs', 'Custom General Name', 'rb_development' ),
+		'singular_name'         => _x( 'Custom', 'Custom Singular Name', 'rb_development' ),
+		'menu_name'             => __( 'Customs', 'rb_development' ),
+		'name_admin_bar'        => __( 'Custom', 'rb_development' ),
 		'archives'              => __( 'Item Archives', 'rb_development' ),
 		'attributes'            => __( 'Item Attributes', 'rb_development' ),
 		'parent_item_colon'     => __( 'Parent Item:', 'rb_development' ),
@@ -32,8 +32,8 @@ add_action( 'init', function() {
 		'filter_items_list'     => __( 'Filter items list', 'rb_development' ),
 	);
 	$args = array(
-		'label'                 => __( 'Post Type', 'rb_development' ),
-		'description'           => __( 'Post Type Description', 'rb_development' ),
+		'label'                 => __( 'Custom', 'rb_development' ),
+		'description'           => __( 'Custom Description', 'rb_development' ),
 		'labels'                => $labels,
 		'supports'              => ['title', 'thumbnail', 'excerpt', "custom-fields"],
 		'taxonomies'            => array( 'category', 'post_tag' ),

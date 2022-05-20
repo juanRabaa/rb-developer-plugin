@@ -104,11 +104,7 @@ trait RB_Object_Type_Fields_Manager{
     }
 
     static public function get_field_subtypes($field_args){
-        $field_subtype_kinds = $field_args[self::get_object_subtype()] ?? [];
-
-        // TODO: use default object subtype kind
-        if(!$field_subtype_kinds)
-            return;
+        $field_subtype_kinds = $field_args[self::get_object_subtype()] ?? [self::get_default_object_subtype()];
         return is_array($field_subtype_kinds) ? $field_subtype_kinds : [$field_subtype_kinds];
     }
 

@@ -68,6 +68,15 @@ function rb_update_post_meta($post_id, $post_type, $values){
     ));
 }
 
+function rb_update_user_meta($user_ID, $values){
+    rb_update_object_type_meta(array(
+        "object_id"                         => $user_ID,
+        "object_type_rest_manager"          => new WP_REST_Users_Controller(),
+        "object_meta_rest_manager"          => new WP_REST_User_Meta_Fields(),
+        "values"                            => $values, // meta values to save
+    ));
+}
+
 /**
 *   Object lists columns
 *   @see RB_Objects_List_Column::__construct
