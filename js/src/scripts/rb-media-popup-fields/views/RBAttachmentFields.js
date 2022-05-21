@@ -26,7 +26,7 @@ wp.media.view.RBAttachmentFields = View.extend(/** @lends wp.media.view.Attachme
 	},
 
 	initialize: function() {
-		this.listenTo( this.model, 'change:rbfields', this.render );
+		// this.listenTo( this.model, 'change:rbfields', this.render );
 	},
 	/**
 	 * @return {wp.media.view.AttachmentCompat} Returns itself to allow chaining.
@@ -50,6 +50,9 @@ wp.media.view.RBAttachmentFields = View.extend(/** @lends wp.media.view.Attachme
         // REVIEW: Render the react component here?
 		// var compat = this.model.get('compat'); // REVIEW: Where is the view comming from? ans: from get_compat_media_markup
 		const rbfields = this.model.get("rbfields");
+        if(!rbfields)
+            return this;
+
 		this.rbfieldsContainers = [];
 		this.views.detach();
 		this.$el.html(rbfields.placeholder);
