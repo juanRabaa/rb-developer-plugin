@@ -25,7 +25,7 @@ class RB_User_Meta_Fields_Manager {
     }
 
     static public function get_object_subtype(){
-        return "user";
+        return "root";
     }
 
     static public function get_default_object_subtype(){

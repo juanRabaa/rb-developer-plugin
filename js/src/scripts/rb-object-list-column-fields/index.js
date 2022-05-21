@@ -10,6 +10,7 @@ const apiFetch = wp.apiFetch;
 *   meta value.
 */
 async function render_fields(){
+    // TODO: CATCH ERRORS
     const registeredObjectSubtypeKindMetaFields = await apiFetch( {
         path: `/rb-fields/v1/wp-object/${RBObjectsList.objectSubtype}/${RBObjectsList.subtypeKind}`,
     } );

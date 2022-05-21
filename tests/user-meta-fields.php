@@ -8,8 +8,10 @@ add_action( "rb-fields-object-user-ready", function() use ($test_fields_data, $s
 	        "icon"          => "format-gallery",
 	        "position"      => "document-settings-panel",
 	    ),
+		"roles"			=> array("editor"),
+		// "capabilities"	=> array("edit_others_posts"),
 		"column"		=> array(
-			"title"			=> "Main Gallery",
+			"title"			=> "Editor column",
 		),
 	    "field"        => array(
 			"type"          => "array",
@@ -36,5 +38,5 @@ add_action( "rb-fields-object-user-ready", function() use ($test_fields_data, $s
 			"position"      => "sidebar",
 		),
 		"field"        => $test_fields_data,
-	));	
+	));
 });

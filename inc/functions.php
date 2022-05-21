@@ -1,5 +1,25 @@
 <?php
 
+function rb_array_every($array, $cb){
+    $index = 0;
+    foreach ($array as $key => $value) {
+        if(!call_user_func($cb, $value, $key, $index))
+            return false;
+        $index++;
+    }
+    return true;
+}
+
+function rb_array_any($array, $cb){
+    $index = 0;
+    foreach ($array as $key => $value) {
+        if(call_user_func($cb, $value, $key, $index))
+            return true;
+        $index++;
+    }
+    return false;
+}
+
 function pre_print(){
     echo "<pre>";
     foreach (func_get_args() as $value) {
@@ -114,6 +134,10 @@ function rb_add_terms_list_column($id, $admin_pages, $title, $render_callback, $
     return new RB_Terms_List_Column($id, $admin_pages, $title, $render_callback, $args);
 }
 
+function rb_add_users_list_column($id, $title, $render_callback, $args = array()){
+    return new RB_Users_List_Column($id, $title, $render_callback, $args);
+}
+
 
 /**
 *   @see RB_Objects_List_Column::remove
@@ -124,4 +148,45 @@ function rb_remove_posts_list_column($filter_id, $posts_types, $columns_remove, 
 
 function rb_remove_terms_list_column($filter_id, $taxonomies_names, $columns_remove, $args = array()){
     return RB_Terms_List_Column::remove($filter_id, $taxonomies_names, $columns_remove, $args);
+}
+
+function rb_remove_users_list_column($filter_id, $columns_remove, $args = array()){
+    return RB_Users_List_Column::remove($filter_id, $columns_remove, $args);
+}
+
+/**
+*   Puts a value into an array as its only item. If the value already is an array
+*   it returns it.
+*   @param mixed $value
+*   @param bool $null_on_empty                                                  Wheter to return null if the value passed
+*                                                                               is empty. If not, it will return an empty array.
+*
+*/
+function rb_force_array($value, $null_on_empty = false){
+    if(is_array($value))
+        return $value;
+    if(empty($value)){
+        return $null_on_empty ? null : [];
+    }
+    return [$value];
+}
+
+/**
+*   Returns true if a user has any of the roles passed.
+*   @param WP_user $user
+*   @param string[] $roles
+*   @return bool
+*/
+function rb_user_has_any_role($user, $roles){
+    return empty($roles) || rb_array_any( $roles, fn($role) => in_array($role, $user->roles) );
+}
+
+/**
+*   Returns true if a user has all of the capabilities passed.
+*   @param WP_user $user
+*   @param string[] $capabilities
+*   @return bool
+*/
+function rb_user_has_capabilities($user, $capabilities){
+    return empty($capabilities) || rb_array_every($capabilities, fn($cap) => $user->has_cap($cap));
 }

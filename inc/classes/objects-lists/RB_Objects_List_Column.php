@@ -47,6 +47,13 @@ abstract class RB_Objects_List_Column{
     */
     protected $should_add = null;
 
+    /**
+    *   @property callback|null $show_content
+    *   A function that returns a bool indicating wheter the column content should
+    *   render for the current row object.
+    */
+    protected $show_content = null;
+
     public function __construct($id, $admin_pages, $title, $render_callback, $args = array()) {
         $this->id = $id;
         $this->admin_pages = $admin_pages;
@@ -55,6 +62,7 @@ abstract class RB_Objects_List_Column{
         $this->cell_class = isset($args['cell_class']) && is_string($args['cell_class']) ? $args['cell_class'] : $this->cell_class;
         $this->position = isset($args['position']) && is_int($args['position']) ? $args['position'] : $this->position;
         $this->should_add = isset($args['should_add']) && is_callable($args['should_add']) ? $args['should_add'] : $this->should_add;
+        $this->show_content = isset($args['show_content']) && is_callable($args['show_content']) ? $args['show_content'] : $this->show_content;
         $this->column_setup();
     }
 
@@ -114,16 +122,21 @@ abstract class RB_Objects_List_Column{
         return call_user_func($this->should_add);
     }
 
+    public function should_show_content($column, $wp_object){
+        return !is_callable($this->show_content) || call_user_func($this->show_content, $column, $wp_object);
+    }
+
     /**
     *   Render the content for this column
     *   @param string $columns                              Column name
     *   @param mixed|int|null $wp_object                    ID or instances of the wp object.
     */
     public function render_content($column, $wp_object = null){
-        if( is_callable($this->render_callback) ):
+        $wp_object = $this->get_object($wp_object);
+        if( $this->should_show_content($column, $wp_object) && is_callable($this->render_callback) ):
             ?>
             <div class="rb-object-column <?php echo esc_attr($this->filter_cell_class()); ?>">
-                <?php call_user_func($this->render_callback, $column, $this->get_object($wp_object)); ?>
+                <?php call_user_func($this->render_callback, $column, $wp_object); ?>
             </div>
             <?php
         endif;

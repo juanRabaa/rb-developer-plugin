@@ -8,21 +8,22 @@
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
  *
- * @link              https://genosha.com.ar
- * @since             1.0.0
- * @package           Gen_Wp_Post_Views_Count_Plugin
+ * @link              	https://genosha.com.ar
+ * @since             	1.0.0
+ * @package           	Gen_Wp_Post_Views_Count_Plugin
  *
  * @wordpress-plugin
- * Plugin Name:       RB Developer Plugin
- * Plugin URI:        https://genosha.com.ar
- * Description:       Count views for posts
- * Version:           1.0.0
- * Author:            Juan Cruz Rabaglia
- * Author URI:        https://genosha.com.ar
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       posts-views
- * Domain Path:       /languages
+ * Plugin Name:       	RB Developer Plugin
+ * Plugin URI:        	https://genosha.com.ar
+ * Description:       	Count views for posts
+ * Version:           	1.0.0
+ * Author:            	Juan Cruz Rabaglia
+ * Author URI:        	https://genosha.com.ar
+ * License:           	GPL-2.0+
+ * License URI:       	http://www.gnu.org/licenses/gpl-2.0.txt
+ * Text Domain:       	posts-views
+ * Domain Path:       	/languages
+ * Requires PHP: 		8
  */
 
 // If this file is called directly, abort.
@@ -82,11 +83,16 @@ add_action( 'admin_enqueue_scripts', function(){
         $object_subtype = "post_type";
         $subtype_kind = $current_screen->post_type;
     }
-    else if($current_screen->base === "edit-tags"){
+	else if($current_screen->base === "edit-tags"){
         $object_type = "term";
         $object_subtype = "taxonomy";
         $subtype_kind = $current_screen->taxonomy;
     }
+	else if($current_screen->base === "users"){
+		$object_type = "user";
+		$object_subtype = "root";
+		$subtype_kind = "user";
+	}
 
     if($object_subtype){
         // wp_enqueue_media();
