@@ -72,35 +72,48 @@ require_once( RB_DEVELOPER_PLUGIN_PATH . "/tests/customizer.php" );
 
 
 add_action( 'admin_enqueue_scripts', function(){
+	$settings = array(
+		"objectType"			=> "",
+		"objectSubtype"			=> "",
+		"subtypeKind"			=> "",
+		"objectSingle"			=> "", // Used when generating the rows ids
+		"fields"				=> "",
+	);
+	$dependencies = [];
     $current_screen = get_current_screen();
-    $object_type = "";
-    $object_subtype = "";
-    $subtype_kind = "";
 
     // REVIEW: Is there a way to make it more dynamic?
     if($current_screen->base === "edit" || $current_screen->base === "upload"){
-        $object_type = "post";
-        $object_subtype = "post_type";
-        $subtype_kind = $current_screen->post_type;
+        $settings["objectType"] = "post";
+        $settings["objectSubtype"] = "post_type";
+        $settings["subtypeKind"] = $current_screen->post_type;
+		$settings["objectSingle"] = "post";
+		$settings["fields"] = RB_Post_Meta_Fields_Manager::get_kind_fields($settings["subtypeKind"]);
+		$dependencies = ["inline-edit-post"];
     }
 	else if($current_screen->base === "edit-tags"){
-        $object_type = "term";
-        $object_subtype = "taxonomy";
-        $subtype_kind = $current_screen->taxonomy;
+        $settings["objectType"] = "term";
+        $settings["objectSubtype"] = "taxonomy";
+        $settings["subtypeKind"] = $current_screen->taxonomy;
+		$settings["objectSingle"] = "tag";
+		$settings["fields"] = RB_Term_Meta_Fields_Manager::get_kind_fields($settings["subtypeKind"]);
+		$dependencies = ["inline-edit-tax"];
     }
 	else if($current_screen->base === "users"){
-		$object_type = "user";
-		$object_subtype = "root";
-		$subtype_kind = "user";
+		$settings["objectType"] = "user";
+		$settings["objectSubtype"] = "root";
+		$settings["subtypeKind"] = "user";
+		$settings["objectSingle"] = "user";
+		$settings["fields"] = RB_User_Meta_Fields_Manager::get_kind_fields("root");
 	}
 
-    if($object_subtype){
+    if($settings["objectSubtype"]){
         // wp_enqueue_media();
-        wp_enqueue_script( 'rb-object-list-column-fields', RB_DEVELOPER_PLUGIN_DIST_SCRIPTS . "/rb-object-list-column-fields/index.min.js", ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-plugins', 'wp-edit-post'], false );
-        wp_localize_script( "rb-object-list-column-fields", "RBObjectsList", array(
-            "objectType"            => $object_type,
-            "objectSubtype"         => $object_subtype,
-            "subtypeKind"           => $subtype_kind,
-        ));
+		$script_dependencies = array_merge(
+			['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-plugins', 'wp-edit-post'],
+			$dependencies,
+		);
+        wp_enqueue_script( 'rb-object-list-column-fields', RB_DEVELOPER_PLUGIN_DIST_SCRIPTS . "/rb-object-list-column-fields/index.min.js", $script_dependencies, false );
+        wp_localize_script( "rb-object-list-column-fields", "RBObjectsList", $settings);
     }
 });

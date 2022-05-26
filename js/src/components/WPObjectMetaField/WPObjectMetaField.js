@@ -4,6 +4,58 @@ const { camelCase } = lodash;
 const { useSelect, useDispatch } = wp.data;
 const { Spinner } = wp.components;
 const apiFetch = wp.apiFetch;
+
+function useEditedEntityAutosave({
+    delay,
+    objectSubtype,
+    subtypeKind,
+    objectID
+}){
+    const [editionTimes, setEditionTimes] = useState(0);
+    const [savingTimes, setSavingTimes] = useState(0);
+    const [listeningToChange, setListeningToChange] = useState(false);
+    const { saveEditedEntityRecord } = useDispatch("core");
+    const { objectData, fetchingObject } = useSelect( function(select){
+        const core = select("core");
+        return {
+            objectData: core.getEditedEntityRecord(objectSubtype, subtypeKind, objectID),
+            fetchingObject: !core.hasFinishedResolution("getEditedEntityRecord", [ objectSubtype, subtypeKind, objectID ]),
+            // saving: core.isSavingEntityRecord(objectSubtype, subtypeKind, objectID),
+        }
+    });
+
+    useEffect( () => {
+        if(editionTimes > 0){
+            setListeningToChange(true);
+            console.log("DELAY");
+            const timeout = setTimeout( () => {
+                console.log("SAVING");
+                setListeningToChange(false);
+                saveEditedEntityRecord(objectSubtype, subtypeKind, objectID);
+            }, delay);
+            return () => {
+                console.log("Save cancelled");
+                setListeningToChange(false);
+                clearTimeout(timeout);
+            };
+        }
+    }, [editionTimes]);
+
+    // useEffect( () => {
+    //     console.log("Object data changed");
+    //     setEditionTimes(0);
+    // }, [objectData]);
+
+    return {
+        objectData,
+        fetchingObject,
+        triggerSave(){
+            console.log("Trigger save");
+            setEditionTimes(editionTimes + 1);
+        },
+    }
+}
+
 /**
 */
 export default function WPObjectMetaField(props){
@@ -12,35 +64,17 @@ export default function WPObjectMetaField(props){
         objectSubtype, // postType - taxonomy
         subtypeKind,
         objectID,
+        onChange,
         ...metaFieldProps
     } = props;
     const parsedObjectSubtype = camelCase(objectSubtype);
-    const editionTimes = useRef(0);
-    const [saveHappened, setSaveHappened] = useState(false);
-    const { objectData, fetchingObject, saving } = useSelect( function(select){
-        const core = select("core");
-        return {
-            objectData: core.getEditedEntityRecord(parsedObjectSubtype, subtypeKind, objectID),
-            fetchingObject: !core.hasFinishedResolution("getEditedEntityRecord", [ parsedObjectSubtype, subtypeKind, objectID ]),
-            saving: saveHappened && !core.hasFinishedResolution("saveEditedEntityRecord", [ parsedObjectSubtype, subtypeKind, objectID ]),
-        }
+    const { triggerSave, objectData, fetchingObject } = useEditedEntityAutosave({
+        delay: 3000,
+        objectSubtype: parsedObjectSubtype,
+        subtypeKind,
+        objectID,
     });
-    const { editEntityRecord, saveEditedEntityRecord } = useDispatch("core");
-
-    // REVIEW: Should a save button be added? how problematic can it be to make the
-    // save of the meta every 3000 ms after last input?
-    useEffect( () => {
-        if(editionTimes.current > 0){
-            const timeout = setTimeout( () => {
-                setSaveHappened(true);
-                saveEditedEntityRecord(parsedObjectSubtype, subtypeKind, objectID);
-            }, 3000);
-            return () => {
-                clearTimeout(timeout);
-            };
-        }
-        editionTimes.current++;
-    }, [objectData]);
+    const { editEntityRecord } = useDispatch("core");
 
     function getMetaValue(){
         return objectData?.meta?.[name] ?? undefined;
@@ -57,6 +91,9 @@ export default function WPObjectMetaField(props){
                 },
             },
         );
+        triggerSave();
+        if(onChange)
+            onChange({ value: newMetaValue });
     }
 
     return (

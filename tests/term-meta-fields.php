@@ -43,6 +43,13 @@ add_action( "rb-fields-object-term-ready", function() use ($test_fields_data){
         "taxonomy"      => "category",
         "single"        => true,
         "type"          => "object",
+        "column"        => array(
+            "title"             => "Test2",
+            "position"          => 4,
+        ),
+        "quick_edit"    => array(
+            "hide_column"       => true,
+        ),
         "panel"         => array(
             "title"         => "Mucha data",
             "icon"          => "format-gallery",

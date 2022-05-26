@@ -16,13 +16,6 @@ class RB_Post_Meta_Field{
             "object_subtype"    => "post_type",
         ));
 
-        /**
-        *   @deprecated
-        *   Not used. Attachment metaboxes are added directly from the RB_Post_Meta_Fields_Manager class
-        *   This version conflicts with the render of filds in the media popup via the extension of the
-        *   wp media backbone api in the rb-media-popup-fields script
-        */
-        // self::attachment_metaboxes();
         add_action("current_screen", array($this, "on_not_gutenberg") );
     }
 
@@ -39,39 +32,19 @@ class RB_Post_Meta_Field{
         return $post->ID ?? null;
     }
 
+    public function is_own_quick_edit($post_type, $taxonomy){
+        $field_kinds = $this->get_field_config_kinds();
+        if(!empty($field_kinds) && !in_array($post_type, $field_kinds))
+            return false;
+        return true;
+    }
+
     // Meta fields are added directly with the wp api on gutenberg, so on no gutenberg
     // metaboxes must be added the classic way (add_meta_box)
     public function on_not_gutenberg(){
         if(!get_current_screen()->is_block_editor()){
             add_action( 'add_meta_boxes', array( $this, 'add_metabox' ) );
         }
-    }
-
-    /**
-    *   @deprecated
-    */
-    protected function attachment_metaboxes(){
-        if(!in_array("attachment", $this->subtype_kinds))
-            return;
-        add_filter('attachment_fields_to_edit', array($this, "add_media_popup_metaboxes"), null, 2);
-    }
-
-    /**
-    *   @deprecated
-    */
-    public function add_media_popup_metaboxes( $form_fields, $post ){
-        $meta_value = get_post_meta($post->ID, $this->field_config["meta_key"], true);
-        $form_fields[$this->field_config["meta_key"]] = array(
-            'label' => 'Custom text field',
-            'input' => 'text', // you may alos use 'textarea' field
-            'value' => $meta_value,
-            'helps' => 'This is help text',
-            'extra_rows'    => array(),
-            'show_in_edit'  => true,
-            'show_in_modal' => false,
-        );
-        return $form_fields;
-        // if( get_current_screen()->is_block_editor() )
     }
 
     public function add_metabox(){

@@ -61,7 +61,7 @@ class RB_Post_Meta_Fields_Manager {
         $field_data = self::base_add_field($field_args);
         $field_subtype_kinds = self::get_field_subtypes($field_args);
         extract($field_data); //$field_config, $field_schema
-        if($field_config)
+        if($field_config) // REVIEW: Should I be creating the RB_Post_Meta_Field intance when it is a nav_menu_item kind?
             new RB_Post_Meta_Field($field_config);
         if( in_array("nav_menu_item", $field_subtype_kinds) )
             self::$nav_menu_fields[] = new RB_Menu_Item_Field($field_config, $field_args);

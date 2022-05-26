@@ -21,6 +21,13 @@ class RB_Term_Meta_Field{
         return $term->term_id ?? null;
     }
 
+    public function is_own_quick_edit($post_type, $taxonomy){
+        $field_kinds = $this->get_field_config_kinds();
+        if(!empty($field_kinds) && !in_array($taxonomy, $field_kinds))
+            return false;
+        return true;
+    }
+
     protected function setup_list_column(){
         $column = $this->get_column_config();
         if($column){

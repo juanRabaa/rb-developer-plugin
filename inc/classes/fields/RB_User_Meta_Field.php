@@ -54,6 +54,10 @@ class RB_User_Meta_Field{
         return $user->ID ?? null;
     }
 
+    public function is_own_quick_edit($post_type, $taxonomy){
+        return false;
+    }
+
     public function render_metabox($user){
         if(!$this->is_for_user($user))
             return;

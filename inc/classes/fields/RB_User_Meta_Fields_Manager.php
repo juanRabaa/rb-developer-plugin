@@ -11,8 +11,6 @@ class RB_User_Meta_Fields_Manager {
         filter_field_config as base_filter_field_config;
     }
 
-    static protected $nav_menu_fields = [];
-
     static protected function on_init(){
         self::base_on_init();
 
