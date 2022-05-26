@@ -6,7 +6,6 @@
 class RB_Term_Meta_Fields_Manager{
     use RB_Object_Type_Fields_Manager {
         on_init as base_on_init;
-        add_field_to_kind as base_add_field_to_kind;
     }
 
     static protected function on_init(){
@@ -32,13 +31,8 @@ class RB_Term_Meta_Fields_Manager{
         return get_taxonomies();
     }
 
-    static public function add_field_to_kind($field_args, $kind){
-        $field_data = self::base_add_field_to_kind($field_args, $kind);
-        extract($field_data); //$field_config, $field_schema
-        if($field_config)
-            new RB_Term_Meta_Field($field_config);
-
-        return $field_config;
+    static protected function generate_field_instance($field_data){
+        return new RB_Term_Meta_Field($field_data["field_config"]);
     }
 
     static public function enqueue_admin_scripts($hook){

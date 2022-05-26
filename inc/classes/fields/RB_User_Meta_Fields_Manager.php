@@ -7,7 +7,6 @@
 class RB_User_Meta_Fields_Manager {
     use RB_Object_Type_Fields_Manager {
         on_init as base_on_init;
-        add_field as base_add_field;
         filter_field_config as base_filter_field_config;
     }
 
@@ -32,6 +31,11 @@ class RB_User_Meta_Fields_Manager {
 
     static public function get_kinds(){
         return ["user"];
+    }
+
+    static protected function generate_field_instance($field_data){
+        extract($field_data);
+        return new RB_User_Meta_Field($field_config);
     }
 
     /**
@@ -59,14 +63,6 @@ class RB_User_Meta_Fields_Manager {
         $field_config = array_merge($default_args, $field_config);
         $field_config['panel']  = array_merge($panel_args, $field_config["panel"]);
 
-        return $field_config;
-    }
-
-    static public function add_field($field_args){
-        $field_data = self::base_add_field($field_args);
-        extract($field_data);
-        if($field_config)
-            new RB_User_Meta_Field($field_config, $field_args);
         return $field_config;
     }
 

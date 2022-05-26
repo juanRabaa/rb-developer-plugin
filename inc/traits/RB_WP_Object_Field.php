@@ -61,6 +61,15 @@ trait RB_WP_Object_Field {
         }
     }
 
+    /**
+    *   Indicates if the custom column for this field is hidden. This option is
+    *   only available when the field has a quick edit field, since it makes it
+    *   obligatory to have a column.
+    */
+    public function is_column_hidden(){
+        return $this->quick_edit["hide_column"] ?? false;
+    }
+
     public function get_column_config(){
         $config = null;
         if(isset($this->field_config["column"]) && $this->field_config["column"]){

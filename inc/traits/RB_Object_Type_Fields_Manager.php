@@ -7,6 +7,7 @@ require_once( RB_DEVELOPER_PLUGIN_TRAITS . "/Initializer.php" );
 trait RB_Object_Type_Fields_Manager{
     use Initializer;
     static protected $kind_fields_manager = array();
+    static protected $fields = array();
 
     /**
     *   @property RB_Fields_Manager $fields_generator                           This instance of RB_Fields_Manager is used
@@ -30,6 +31,8 @@ trait RB_Object_Type_Fields_Manager{
     abstract static public function get_default_object_subtype(); // post, post_tag, category...
 
     abstract static public function get_kinds(); // get_post_types
+
+    abstract static protected function generate_field_instance($field_data);
 
     static public function register_rest_routes(){
         $object_subtype = self::get_object_subtype();
@@ -84,6 +87,15 @@ trait RB_Object_Type_Fields_Manager{
         return self::get_kind_fields_manager($kind_name)?->get_registered_fields() ?? [];
     }
 
+    static public function get_kind_hidden_columns($kind_name){
+        $hidden_columns = array();
+        foreach (self::$fields as $field) {
+            if( $field->is_column_hidden() && in_array($kind_name, $field->get_field_config_kinds()) )
+                $hidden_columns[] = $field->get_meta_key();
+        }
+        return $hidden_columns;
+    }
+
     static public function get_kind_field($kind_name, $meta_key){
         return self::get_kind_fields($kind_name)[$meta_key] ?? null;
     }
@@ -115,6 +127,8 @@ trait RB_Object_Type_Fields_Manager{
         foreach ($field_subtype_kinds as $kind) {
             self::add_field_to_kind($field_data, $kind);
         }
+
+        self::$fields[] = self::generate_field_instance($field_data);
 
         return $field_data;
     }

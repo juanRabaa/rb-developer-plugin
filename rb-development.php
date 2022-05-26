@@ -78,17 +78,20 @@ add_action( 'admin_enqueue_scripts', function(){
 		"subtypeKind"			=> "",
 		"objectSingle"			=> "", // Used when generating the rows ids
 		"fields"				=> "",
+		"hidden_columns"		=> [],
 	);
 	$dependencies = [];
     $current_screen = get_current_screen();
 
     // REVIEW: Is there a way to make it more dynamic?
+	// It could be done directly in each Fields_Manager
     if($current_screen->base === "edit" || $current_screen->base === "upload"){
         $settings["objectType"] = "post";
         $settings["objectSubtype"] = "post_type";
         $settings["subtypeKind"] = $current_screen->post_type;
 		$settings["objectSingle"] = "post";
 		$settings["fields"] = RB_Post_Meta_Fields_Manager::get_kind_fields($settings["subtypeKind"]);
+		$settings["hidden_columns"] = RB_Post_Meta_Fields_Manager::get_kind_hidden_columns($settings["subtypeKind"]);
 		$dependencies = ["inline-edit-post"];
     }
 	else if($current_screen->base === "edit-tags"){
@@ -97,6 +100,7 @@ add_action( 'admin_enqueue_scripts', function(){
         $settings["subtypeKind"] = $current_screen->taxonomy;
 		$settings["objectSingle"] = "tag";
 		$settings["fields"] = RB_Term_Meta_Fields_Manager::get_kind_fields($settings["subtypeKind"]);
+		$settings["hidden_columns"] = RB_Term_Meta_Fields_Manager::get_kind_hidden_columns($settings["subtypeKind"]);
 		$dependencies = ["inline-edit-tax"];
     }
 	else if($current_screen->base === "users"){
@@ -115,5 +119,25 @@ add_action( 'admin_enqueue_scripts', function(){
 		);
         wp_enqueue_script( 'rb-object-list-column-fields', RB_DEVELOPER_PLUGIN_DIST_SCRIPTS . "/rb-object-list-column-fields/index.min.js", $script_dependencies, false );
         wp_localize_script( "rb-object-list-column-fields", "RBObjectsList", $settings);
+
+		/* 	Hide the columns. Some columns need to be registered for a quick edit field
+		*	to be added. If we don't want the column to show in this case, it can be hidden
+		*/
+		if(!empty($settings["hidden_columns"])){
+			add_action("admin_head", function() use ($settings){
+				?>
+				<style id="rb-hidden-col-styles">
+					<?php foreach($settings["hidden_columns"] as $hidden_col_key): ?>
+						<?php echo esc_attr("#$hidden_col_key"); ?>{
+							display: none;
+						}
+						<?php echo esc_attr(".column-$hidden_col_key"); ?>{
+							display: none;
+						}
+					<?php endforeach; ?>
+				</style>
+				<?php
+			});
+		}
     }
 });

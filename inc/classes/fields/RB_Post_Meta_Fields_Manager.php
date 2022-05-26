@@ -7,7 +7,6 @@
 class RB_Post_Meta_Fields_Manager {
     use RB_Object_Type_Fields_Manager {
         on_init as base_on_init;
-        add_field as base_add_field;
         filter_field_config as base_filter_field_config;
     }
 
@@ -39,6 +38,14 @@ class RB_Post_Meta_Fields_Manager {
         return get_post_types();
     }
 
+    static protected function generate_field_instance($field_data){
+        extract($field_data); //$field_config, $field_schema
+        $field_subtype_kinds = self::get_field_subtypes($field_config);
+        if( in_array("nav_menu_item", $field_subtype_kinds) )
+            self::$nav_menu_fields[] = new RB_Menu_Item_Field($field_config);
+        return new RB_Post_Meta_Field($field_config); // REVIEW: Should I be creating the RB_Post_Meta_Field intance when it is a nav_menu_item kind?
+    }
+
     static public function filter_field_config($field_config){
         $field_config = self::base_filter_field_config($field_config);
         $default_args = array(
@@ -54,17 +61,6 @@ class RB_Post_Meta_Fields_Manager {
         $field_config = array_merge($default_args, $field_config);
         $field_config['panel']  = array_merge($panel_args, $field_config["panel"]);
 
-        return $field_config;
-    }
-
-    static public function add_field($field_args){
-        $field_data = self::base_add_field($field_args);
-        $field_subtype_kinds = self::get_field_subtypes($field_args);
-        extract($field_data); //$field_config, $field_schema
-        if($field_config) // REVIEW: Should I be creating the RB_Post_Meta_Field intance when it is a nav_menu_item kind?
-            new RB_Post_Meta_Field($field_config);
-        if( in_array("nav_menu_item", $field_subtype_kinds) )
-            self::$nav_menu_fields[] = new RB_Menu_Item_Field($field_config, $field_args);
         return $field_config;
     }
 

@@ -10,9 +10,9 @@ class RB_Menu_Item_Field{
     */
     protected $object_kind = null;
 
-    public function __construct($field_config, $args){
+    public function __construct($field_config){
         $this->field_config = $field_config;
-        $this->object_kind = $args["object_kind"] ?? null;
+        $this->object_kind = $field_config["object_kind"] ?? null;
         add_action( 'wp_nav_menu_item_custom_fields', array($this, 'render_field'), 10, 4 );
         /* The save proccess happens in the RB_Post_Meta_Fields_Manager */
     }

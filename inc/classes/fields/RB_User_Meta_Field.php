@@ -7,15 +7,13 @@
 class RB_User_Meta_Field{
     use RB_WP_Object_Field;
     protected $field_config;
-    protected $field_args;
     protected $capabilities;
     protected $roles;
 
-    public function __construct($field_config, $field_args){
+    public function __construct($field_config){
         $this->field_config = $field_config;
-        $this->field_args = $field_args;
-        $this->capabilities = $field_args["capabilities"] ?? [];
-        $this->roles = $field_args["roles"] ?? [];
+        $this->capabilities = $field_config["capabilities"] ?? [];
+        $this->roles = $field_config["roles"] ?? [];
 
         $this->setup_wp_object_field( array(
             "object_type"       => "user",
