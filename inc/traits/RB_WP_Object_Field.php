@@ -3,7 +3,7 @@ trait RB_WP_Object_Field {
     protected $object_type = "";
     protected $object_subtype = "";
     protected $subtype_kinds = [];
-    protected $quick_edit = array();
+    protected $quick_edit = null;
 
     abstract protected function setup_list_column();
 
@@ -27,8 +27,8 @@ trait RB_WP_Object_Field {
         $this->object_type = $args["object_type"];
         $this->object_subtype = $args["object_subtype"];
         $this->subtype_kinds = is_array($this->field_config[$this->object_subtype]) ? $this->field_config[$this->object_subtype] : [$this->field_config[$this->object_subtype]];
-        $this->setup_list_column();
         $this->set_quick_edit_config();
+        $this->setup_list_column();
         add_action('quick_edit_custom_box', array($this, "render_quick_edit_field"), 10, 3);
     }
 
@@ -72,7 +72,8 @@ trait RB_WP_Object_Field {
 
     public function get_column_config(){
         $config = null;
-        if(isset($this->field_config["column"]) && $this->field_config["column"]){
+        // If there is a quick edit field, force column
+        if($this->quick_edit || (isset($this->field_config["column"]) && $this->field_config["column"])){
             $config = array(
                 "title"             => $this->field_config["panel"]["title"] ?? "",
                 "content"           => null,
@@ -80,7 +81,7 @@ trait RB_WP_Object_Field {
                 "render_callback"   => null,
             );
 
-            if(is_array($this->field_config["column"]))
+            if(isset($this->field_config["column"]) && is_array($this->field_config["column"]))
                 $config = array_merge($config, $this->field_config["column"]);
         }
         return $config;

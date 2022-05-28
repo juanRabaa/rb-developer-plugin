@@ -109,6 +109,7 @@ add_action( "rb-fields-object-post-ready", function() use ($test_fields_data, $s
 			"title"			=> "Main Gallery",
 			// "content"		=> "Columna",
 		),
+		"quick_edit"	=> true,
 	    "field"        => array(
 			"type"          => "array",
             "items" => array(

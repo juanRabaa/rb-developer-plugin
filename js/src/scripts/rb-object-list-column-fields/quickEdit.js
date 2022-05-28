@@ -4,7 +4,6 @@ import { onElementRemoved } from "HELPERS/helpers";
 import RBFinalField from 'COMPONENTS/RBFinalField';
 import $ from 'jquery';
 const { camelCase } = lodash;
-
 // we create a copy of the WP inline edit post function
 const inlineEditObject = window.inlineEditPost ?? window.inlineEditTax;
 const $wp_inline_edit = inlineEditObject.edit;
@@ -16,35 +15,10 @@ const $wp_inline_edit = inlineEditObject.edit;
 const lastPlaceholders = [];
 
 /**
-*   @property {bool} closedBySaving                                             Indicates if the user closed the quick edit saving
-*                                                                               its changes.
-*/
-let closedBySaving;
-
-/**
 *   @property {object} quickEditChanges                                         Keeps track of the custom metas that had been changed
 *                                                                               in the quick edit.
 */
 let quickEditChanges;
-
-/**
-*   The user can close the quick edit row by editer saving the edit or canceling it.
-*   There is no way to detect which way the user went, since there are no event triggers.
-*   The only way to know if the user actually saved the changes is to listen to the ajaxComplete
-*   that gets triggered by the save.
-*   We need to know if the user saved to dispatch the change to the wp.data.dispatch("core").editEntityRecord
-*   since the columns fields feed from the editedRecord store.
-*/
-function checkIfClosedBySaving(event, request, settings){
-    if(settings?.data){
-        const searchParams = new URLSearchParams(settings.data);
-        const action = searchParams.get("action");
-        if(action === "inline-save" || action === "inline-save-tax"){
-            closedBySaving = true;
-            $(document).off("ajaxComplete", checkIfClosedBySaving);
-        }
-    }
-}
 
 /**
 *   Unmounts all the components from the quick edit.
@@ -103,7 +77,6 @@ inlineEditObject.edit = function( editBtn ) {
     const $objectRow = $( `#${getObjectSingleKey()}-${objectID}` );
 
     // Initialize variables
-    closedBySaving = false;
     quickEditChanges = {};
 
     // Render the fields on the placeholders inside $editRow
@@ -122,20 +95,19 @@ inlineEditObject.edit = function( editBtn ) {
         }/>, $placeholder[0]);
     });
 
-    $(document).off("ajaxComplete", checkIfClosedBySaving);
-    $(document).on("ajaxComplete", checkIfClosedBySaving);
+    // ON SAVE (old row removed and replace with new one)
+    onElementRemoved($objectRow[0], function(){
+        dispatchObjectEdition({ objectID });
+        // Removed field components from old post row that was removed.
+        $(".rb-field-col-placeholder", $objectRow).each( function(index){
+            unmountComponentAtNode(this);
+        });
+        // Render fields in new post row
+        renderColumnsFields({ parent: getObjectRow({objectID}) });
+    });
 
+    // ON QUICK EDIT BOX CLOSE
     onElementRemoved($editRow[0], function(){
         unmountComponents();
-
-        if(closedBySaving){
-            dispatchObjectEdition({ objectID });
-            // Removed field components from old post row that was removed.
-            $(".rb-field-col-placeholder", $objectRow).each( function(index){
-                unmountComponentAtNode(this);
-            });
-            // Render fields in new post row
-            renderColumnsFields({ parent: getObjectRow({objectID}) });
-        }
     });
 };
